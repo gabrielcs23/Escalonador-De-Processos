@@ -1,12 +1,13 @@
 from bcolors import BColors
 
 
-class Processo:
+class Processo(object):
 
     id = None
     t_chegada = None
     prioridade = None
     t_processo = None
+    fila=None
     mbytes = None
     n_printer = None
     n_modem = None
@@ -14,8 +15,13 @@ class Processo:
     n_cd = None
     estado = None
     tempo_restante = None
+    tempo_finalizacao = None
 
-    def __init__(self, t_c, p, t_p, mb, np, ns, nm, ncd):
+<<<<<<< HEAD
+    def __init__(self, t_c, p, t_p, mb, np, ns, nm, ncd,f):
+=======
+    def __init__(self, t_c, p, t_p, mb, np, nm, ncd):
+>>>>>>> 162fd321fb0deaf7fa988a6f7267dbdd1f215b9c
         self.id = id
         self.t_chegada = t_c
         self.prioridade = p
@@ -26,6 +32,7 @@ class Processo:
         self.ncd = ncd
         self.estado = "Espera"
         self.tempo_restante = t_p
+        self.fila=f
 
     def imprime_processo(self):
 

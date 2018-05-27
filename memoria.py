@@ -7,6 +7,8 @@ class Memoria:
     l_executando = None
 
 
+
+
     def __init__(self):
         self.m_livre = 8192
         self.m_total = 8192
