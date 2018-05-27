@@ -18,7 +18,11 @@ class Processo(object):
     tempo_finalizacao = None
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def __init__(self, t_c, p, t_p, mb, np, ns, nm, ncd,f):
+=======
+    def __init__(self, t_c, p, t_p, mb, np, nm, ncd):
+>>>>>>> 162fd321fb0deaf7fa988a6f7267dbdd1f215b9c
 =======
     def __init__(self, t_c, p, t_p, mb, np, nm, ncd):
 >>>>>>> 162fd321fb0deaf7fa988a6f7267dbdd1f215b9c
