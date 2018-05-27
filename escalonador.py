@@ -3,7 +3,7 @@ from so import SO
 
 
 # escalonador a longo prazo
-def escalona_lp(self, fila_processos_prontos, lista_novos, memoria):
+def escalona_lp(fila_processos_prontos, lista_novos, memoria):
     # enquanto a lista de processos novos de tempo real estiver com elementos, faça...
     while len(lista_novos['tempoReal']) > 0:
         # se houver memoria livre pra colocar o proximo processo da lista de novos processos
@@ -14,7 +14,7 @@ def escalona_lp(self, fila_processos_prontos, lista_novos, memoria):
             lista_novos['tempoReal'].pop(0)
         else:
             # libera qtd de memoria suficiente pra inserir o proximo processo na lista de pronto
-            self.escalona_mp_suspende(self, lista_novos['tempoReal'][0].mbytes, fila_processos_prontos, memoria)
+            escalona_mp_suspende(lista_novos['tempoReal'][0].mbytes, fila_processos_prontos, memoria)
             # e agora que possui memoria disponivel, insere o novo processo na lista de prontos
             SO.insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos)
             memoria.m_livre -= lista_novos[0].mbytes
@@ -26,14 +26,14 @@ def escalona_lp(self, fila_processos_prontos, lista_novos, memoria):
             memoria.m_livre -= lista_novos['usuario'][0].mbytes
             lista_novos['usuario'].pop(0)
         else:
-            self.escalona_mp_suspende(self, lista_novos['usuario'][0].mbytes, fila_processos_prontos, memoria)
+            escalona_mp_suspende(lista_novos['usuario'][0].mbytes, fila_processos_prontos, memoria)
             SO.insereProcesso(lista_novos['usuario'][0], fila_processos_prontos)
             memoria.m_livre -= lista_novos['usuario'][0].mbytes
             lista_novos['usuario'].pop(0)
 
 # escalonador a medio prazo, parte que remove da memoria principal
 # esta funcao libera memoria até ter no minimo uma quantidade (qtd_memoria) livre
-def escalona_mp_suspende(self, qtd_memoria, processosBloqueados, processosBloqueadosSuspensos, processosProntos, processosProntosSuspensos, memoria):
+def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSuspensos, processosProntos, processosProntosSuspensos, memoria):
     # retira o processo mais recente com prioridade 3 da fila de bloqueado,
     # caso nao exista retira o processo mais recente com prioridade 3 da fila de prontos
 
