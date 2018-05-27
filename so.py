@@ -23,17 +23,30 @@ class SO:
                     if listaProcessoPronto[0].prioridade == 0:
                         # coloca processo na cpu e arruma tempos
                         cpus[i].processo = listaProcessoPronto[0]
-                        cpus[i].tempoRestanteProcesso = cpus[i].processo.t_processo
-                        cpus[i].tempoTotalProcessamento = cpus[i].processo.tempo_restante
+                        if(cpus[i].processo.qtdImpressora or cpus[i].processo.qtdCd or cpus[i].processo.qtdScanner or cpus[i].processo.qtdModem):
+                            cpus[i].tempoRestanteProcesso = 1
+                        else:
+                            cpus[i].tempoRestanteProcesso = cpus[i].processo.t_processo
                         listaProcessoExecutando.append(cpus[i].processo)
                         listaProcessoPronto.pop(0)
                     # insere um processo de outra prioridade, arrumando tempo de feedback
                     else:
                         cpus[i].processo = listaProcessoPronto[0]
-                        cpus[i].tempoRestanteProcesso = pow(2, cpus[i].processo.fila)
-                        cpus[i].tempoTotalProcessamento = pow(2, cpus[i].processo.fila)
+                        if (cpus[i].processo.qtdImpressora or cpus[i].processo.qtdCd or cpus[i].processo.qtdScanner or
+                                cpus[i].processo.qtdModem):
+                            cpus[i].tempoRestanteProcesso = 1
+                        else:
+                            cpus[i].tempoRestanteProcesso = pow(2, cpus[i].processo.fila)
                         listaProcessoExecutando.addend(cpus[i].processo)
                         listaProcessoPronto.pop(0)
+
+    def verificaIO(self,listaBloqueado,listaExecutando,cpus):
+        for i in range(0, len(cpus)):
+            if (cpus[i].processo.qtdImpressora or cpus[i].processo.qtdCd or cpus[i].processo.qtdScanner or cpus[i].processo.qtdModem):
+                if cpus[i].quantum == 0:
+                    self.insereProcesso(cpus[i].processo,listaBloqueado)
+                    listaExecutando.pop(cpus[i].posicaoLista)
+
 
     # função feita para remover processo da cpu
     def desalocaProcessosNaCPU(self, cpus, listaProcessoPronto, listaProcessoExecutando):
@@ -64,7 +77,7 @@ class SO:
                 if processoT.fila < listaProcesso[i].fila:
                     listaProcesso.insert(i, processoT)
                     return
-
+        listaProcesso.append(processoT)
 
 def main():
     filaEntrada = inicilizarEntrada('entrada.txt')

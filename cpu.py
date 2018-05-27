@@ -4,5 +4,5 @@ from processo import Processo
 class CPU:
     processo = None
     posicaoLista = None
-    tempoRestanteProcesso = 0
+    quantum = 0
     tempoTotalProcessamento = None
