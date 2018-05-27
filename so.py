@@ -64,26 +64,3 @@ class SO:
                     listaProcesso.insert(i, processoT)
                     return
         listaProcesso.insert(i, processoT)
-
-    # escalonador a longo prazo
-    def escalona_lp(self, fila_de_processos, lista_novos, memoria):
-        # enquanto a lista de processos novos estiver com elementos, faça...
-        while len(lista_novos) > 0:
-            # se houver memoria livre pra colocar o proximo processo da lista de novos processos
-            if memoria.m_livre > lista_novos[0].mbytes:
-                # coloca o processo e retira este processo da lista de novos processos
-                self.insereProcesso(lista_novos[0],fila_de_processos.processosProntos)
-                memoria.m_livre -= lista_novos[0].mbytes
-                lista_novos.pop(0)
-            else:
-                # enquanto nao tiver memoria para inserir o novo processo na memoria...
-                while memoria.m_livre < lista_novos[0].mbytes:
-                    #retira o ultimo processo da lista de processos Prontos(ou seja
-                    #remove o processo de menor prioridade que entrou mais recentemente e o bloqueia)
-                    self.insereProcesso(fila_de_processos.processosProntos[-1], fila_de_processos.processosBloqueados)
-                    memoria.m_livre += fila_de_processos.processosProntos[0].mbytes
-                    fila_de_processos.processosProntos.pop()
-                # e agora que possui memoria disponivel, insere o novo processo na lista de prontos
-                self.insereProcesso(lista_novos[0],fila_de_processos.processosProntos)
-                memoria.m_livre -= lista_novos[0].mbytes
-                lista_novos.pop(0)
