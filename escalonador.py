@@ -1,4 +1,3 @@
-from processo import Processo
 from so import SO
 
 
@@ -31,6 +30,7 @@ def escalona_lp(fila_processos_prontos, lista_novos, memoria):
             memoria.m_livre -= lista_novos['usuario'][0].mbytes
             lista_novos['usuario'].pop(0)
 
+
 # escalonador a medio prazo, parte que remove da memoria principal
 # esta funcao libera memoria até ter no minimo uma quantidade (qtd_memoria) livre
 def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSuspensos, processosProntos, processosProntosSuspensos, memoria):
@@ -43,8 +43,12 @@ def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSu
     while memoria.m_livre < qtd_memoria and prioridade >= 0:
         # range começa em tamanho da fila -1 (ultimo elemento), vai até 0 (-1 nao incluso) e em passos de -1
         for i in range(len(processosBloqueados)-1,-1,-1):
-            # caso a região tenha prioridade menor do que a prioridade analisada, break
-            if processosBloqueados[i].prioridade < prioridade:
+            # como a analise é feita do final até o começo da fila, a fila começa com a prioridade 3 e desce até 0
+            # caso a prioridade seja inferior da analisada, break
+            # caso seja maior, continue
+            if processosBloqueados[i].prioridade > prioridade:
+                continue
+            elif processosBloqueados[i].prioridade < prioridade:
                 break
             # caso contrário, estamos na região com prioridade igual a prioridade analisada
             else:
@@ -59,7 +63,9 @@ def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSu
                     return
         # mesma analise anterior, porem para a lista de prontos/prontos suspensos
         for i in range(len(processosProntos)-1,-1,-1):
-            if processosProntos[i].prioridade != prioridade:
+            if processosBloqueados[i].prioridade > prioridade:
+                continue
+            elif processosBloqueados[i].prioridade < prioridade:
                 break
             else:
                 SO.insereProcesso(processosProntos[i], processosProntosSuspensos)
@@ -70,3 +76,43 @@ def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSu
                     return
         # diminui prioridade em 1 para analisar a próxima prioridade
         prioridade -= 1
+
+
+#insere processos na memoria principal ate a memoria estar cheia ou ate nao ter mais processos que caibam na memoria
+def escalonador_mp_ativa(processosBloqueados, processosBloqueadosSuspensos, processosProntos, processosProntosSuspensos, memoria):
+    # a partir de prioridade 0, insere processos na memoria principal ate a memoria estar cheia
+    prioridade = 0
+    while prioridade <= 3:
+        # verifica cada processo a partir do indice 0
+        for i in range(len(processosProntosSuspensos)):
+            # como a analise é feita do inicio até o final da fila, a fila começa com a prioridade 0 e sobe até 3
+            # caso a prioridade seja inferior da analisada, continue
+            # caso seja maior, break
+            if processosBloqueadosSuspensos[i].prioridade < prioridade:
+                continue
+            elif processosBloqueadosSuspensos[i].prioridade > prioridade:
+                break
+            else:
+                # se houver espaço na memoria
+                if memoria.m_livre - processosProntosSuspensos[i] > 0:
+                    # insere na fila de processos prontos, remove da lista de prontos suspenso e atualiza memoria
+                    SO.insereProcesso(processosProntosSuspensos[i], processosProntos)
+                    memoria.m_livre -= processosProntosSuspensos[i].mbytes
+                    processosProntosSuspensos.pop(i)
+                    #se nao houver mais memoria, return
+                    if memoria.m_livre == 0:
+                        return
+        # mesma ideia do for anterior, mas para a fila de bloqueados suspenso
+        for i in range(len(processosBloqueadosSuspensos)):
+            if processosBloqueadosSuspensos[i].prioridade < prioridade:
+                continue
+            elif processosBloqueadosSuspensos[i].prioridade > prioridade:
+                break
+            else:
+                if memoria.m_livre - processosBloqueadosSuspensos[i] > 0:
+                    SO.insereProcesso(processosBloqueadosSuspensos[i], processosBloqueados)
+                    memoria.m_livre -= processosBloqueadosSuspensos[i].mbytes
+                    processosBloqueadosSuspensos.pop(i)
+                    if memoria.m_livre == 0:
+                        return
+        prioridade += 1
