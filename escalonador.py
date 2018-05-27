@@ -17,7 +17,7 @@ def inicilizarEntrada(nomeArquivo):
     filaEntrada = []
     for linha in arquivoEntrada:
         linha.split(', ')
-        novoProcesso = Processo(linha[0], linha[1], linha[2], linha[3], linha[4], linha[5], linha[6])
+        novoProcesso = Processo(linha[0], linha[1], linha[2], linha[3], linha[4], linha[5], linha[6], linha[7])
         filaEntrada.append(novoProcesso)
     arquivoEntrada.close()
     return filaEntrada

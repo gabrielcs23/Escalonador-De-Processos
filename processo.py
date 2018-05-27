@@ -17,26 +17,18 @@ class Processo(object):
     tempo_restante = None
     tempo_finalizacao = None
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    def __init__(self, t_c, p, t_p, mb, np, ns, nm, ncd,f):
-=======
-    def __init__(self, t_c, p, t_p, mb, np, nm, ncd):
->>>>>>> 162fd321fb0deaf7fa988a6f7267dbdd1f215b9c
-=======
-    def __init__(self, t_c, p, t_p, mb, np, nm, ncd):
->>>>>>> 162fd321fb0deaf7fa988a6f7267dbdd1f215b9c
+    def __init__(self, t_c, p, t_p, mb, np, ns, nm, ncd):
         self.id = id
         self.t_chegada = t_c
         self.prioridade = p
         self.t_processamento = t_p
         self.mbytes = mb
         self.n_printer = np
+        self.n_scanner = ns
         self.n_modem = nm
         self.ncd = ncd
         self.estado = "Espera"
         self.tempo_restante = t_p
-        self.fila=f
 
     def imprime_processo(self):
 
