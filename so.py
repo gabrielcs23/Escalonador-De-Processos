@@ -64,7 +64,7 @@ class SO:
                 if processoT.fila < listaProcesso[i].fila:
                     listaProcesso.insert(i, processoT)
                     return
-        listaProcesso.insert(i, processoT)
+        listaProcesso.append(processoT)
 
 
 def main():
