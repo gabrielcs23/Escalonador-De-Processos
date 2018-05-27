@@ -58,7 +58,7 @@ class Escalonador(object):
                     i -= 1
                     # caso ja tenha memoria o suficiente, break
                     if memoria.m_livre > qtd_memoria:
-                        break
+                        return
             # mesma analise anterior, porem para a lista de prontos/prontos suspensos
             for i in range(len(processosProntos)-1,-1,-1):
                 if processosProntos[i].prioridade != prioridade:
@@ -69,7 +69,7 @@ class Escalonador(object):
                     processosProntos.pop(i)
                     i -= 1
                     if memoria.m_livre > qtd_memoria:
-                        break
+                        return
             # diminui prioridade em 1 para analisar a próxima prioridade
             prioridade -= 1
 
