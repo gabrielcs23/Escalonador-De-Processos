@@ -1,39 +1,35 @@
-from bcolors import BColors
+# essa é a classe responsável por cada instância de processo
 
 
 class Processo(object):
-
+    # atributos da classe
     id = None
-    t_chegada = None
+    tempoChegada = None
     prioridade = None
-    t_processo = None
-    fila=None
-    mbytes = None
-    n_printer = None
-    n_modem = None
-    n_scanner = None
-    n_cd = None
-    estado = None
-    tempo_restante = None
-    tempo_finalizacao = None
+    tempoProcessador = None
+    espacoMemoria = None
+    qtdImpressora = None
+    qtdScanner = None
+    qtdModem = None
+    qtdCd = None
+    tempoRestante = None
+    tempoFinalizacao = None  # indica quando o processo saiu do sistema
 
-    def __init__(self, t_c, p, t_p, mb, np, ns, nm, ncd):
+    def __init__(self, tempoChegada, prioridade, tempoProcessador, espacoMemoria, qtdImpressora, qtdScanner, qtdModem, qtdCd):
         self.id = id
-        self.t_chegada = t_c
-        self.prioridade = p
-        self.t_processamento = t_p
-        self.mbytes = mb
-        self.n_printer = np
-        self.n_scanner = ns
-        self.n_modem = nm
-        self.ncd = ncd
-        self.estado = "Espera"
-        self.tempo_restante = t_p
+        self.tempoChegada = tempoChegada
+        self.prioridade = prioridade
+        self.tempoProcessador = tempoProcessador
+        self.espacoMemoria = espacoMemoria
+        self.qtdImpressora = qtdImpressora
+        self.qtdScanner = qtdScanner
+        self.qtdModem = qtdModem
+        self.qtdCd = qtdCd
+        self.tempoRestante = self.tempoProcessador
 
     def imprime_processo(self):
 
         print("Processo " + str(self.id) + "\n")
-        print("Estado " + self.estado + "\n")
         print("Tempo de chegada: " + str(self.id) + "\n")
         print("Prioridade " + str(self.id) + "\n")
         print("Tamanho " + str(self.id) + "\n")

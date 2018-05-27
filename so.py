@@ -14,7 +14,7 @@ class SO:
     # funções para interromper que consideram que essas existem também
 
     # função para alocar, caso necessário, o processo da lista de memoria para a cpu
-    def alocaProcessosNaCPU(cpus, listaProcessoPronto, listaProcessoExecutando):
+    def alocaProcessosNaCPU(self, cpus, listaProcessoPronto, listaProcessoExecutando):
         for i in range(0, len(cpus)):
             if cpus[i].tempoRestanteProcesso == 0:
                 if len(listaProcessoPronto) > 0:

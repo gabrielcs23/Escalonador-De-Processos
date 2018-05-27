@@ -1,12 +1,14 @@
-from filaDeProcessos import FilaDeProcessos
 from processo import Processo
-TEMPOREAL = 0
 
 
 def main():
-    filaTempoReal = FilaDeProcessos()
-    filaUsuario = FilaDeProcessos()
     filaEntrada = inicilizarEntrada('entrada.txt')
+    processosNovos = {'tempoReal': [], 'usuario': []}
+    processosProntos = []
+    processosProntosSuspenso = []
+    processosBloqueados = []
+    processosBloqueadosSuspenso = []
+    processosExecutando = []
     processosFinalizados = []
     # TODO some magic
 

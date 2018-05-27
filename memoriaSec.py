@@ -1,4 +1,4 @@
-from io import IO
+from inout import IO
 
 
 class MemSecundaria:

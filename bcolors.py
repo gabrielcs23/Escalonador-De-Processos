@@ -1,3 +1,6 @@
+# isso aqui é a classe que o Daniel usa pra imprimir colorido no terminal
+
+
 class BColors:  # DEFINIÇÃO DE CORES PARA INTERFACE NO TERMINAL
     ROSA = '\033[95m'
     AZUL = '\033[94m'
