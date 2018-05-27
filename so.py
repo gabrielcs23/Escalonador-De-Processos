@@ -2,13 +2,13 @@ from bcolors import BColors
 from processo import Processo
 from cpu import CPU
 
-class So:
+class So():
 
 
     #NÂO TESTEI NADA AINDA, TO FAZENDO VAMOS TESTAR COM A FUNÇÂO PRINCIPAL
 
     #cria as 4 cpus
-    cpus = [CPU(count) for count in range(4)]
+    cpus = [CPU() for count in range(4)]
     tempoSistema = 0
     listaProcessosFinalizados=[]
 
@@ -49,6 +49,10 @@ class So:
                 #senão coloco na lista de prontos e removo da lista de executando
                 else:
                     self.insereProcesso(cpus[i].processo,listaProcessoPronto)
+                    if(cpus[i].processo.fila==3):
+                        cpus[i].processo.fila=1
+                    else:
+                        cpus[i].processo.fila+=1
                     listaProcessoExecutando.pop(cpus[i].posicaoLista)
 
 
