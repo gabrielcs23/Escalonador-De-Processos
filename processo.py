@@ -1,7 +1,7 @@
 from bcolors import BColors
 
 
-class Processo:
+class Processo(object):
 
     id = None
     t_chegada = None
@@ -15,7 +15,7 @@ class Processo:
     estado = None
     tempo_restante = None
 
-    def __init__(self, t_c, p, t_p, mb, np, ns, nm, ncd):
+    def __init__(self, t_c, p, t_p, mb, np, nm, ncd):
         self.id = id
         self.t_chegada = t_c
         self.prioridade = p
