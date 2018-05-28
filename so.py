@@ -1,9 +1,10 @@
 from cpu import CPU
 from processo import Processo
 from gerencia_inout import GerenciaIO
+from typing import List
 
 
-class SO:
+class SO(object):
     # NÂO TESTEI NADA AINDA, TO FAZENDO VAMOS TESTAR COM A FUNÇÂO PRINCIPAL
 
     # cria as 4 cpus
@@ -17,17 +18,17 @@ class SO:
     # funções para interromper que consideram que essas existem também
 
     # função feita para inserir processo em uma das listas de processos da memória
-    def insereProcesso(self, processoT, listaProcesso):
+    def insereProcesso(self, processo: Processo, listaProcesso: List[Processo]):
         for i in range(0, len(listaProcesso)):
-            if processoT.prioridade < listaProcesso[i].prioridade:
-                listaProcesso.insert(i, processoT)
+            if processo.prioridade < listaProcesso[i].prioridade:
+                listaProcesso.insert(i, processo)
                 return
             # se for igual ve por ordem em feedback
-            if processoT.prioridade == listaProcesso[i].prioridade:
-                if processoT.fila < listaProcesso[i].fila:
-                    listaProcesso.insert(i, processoT)
+            if processo.prioridade == listaProcesso[i].prioridade:
+                if processo.fila < listaProcesso[i].fila:
+                    listaProcesso.insert(i, processo)
                     return
-        listaProcesso.append(processoT)
+        listaProcesso.append(processo)
 
     def passagemDeTempo(self):
         for cpu in self.cpus:

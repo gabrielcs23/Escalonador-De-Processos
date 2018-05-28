@@ -15,6 +15,7 @@ class Processo(object):
     qtdCd = None
     tempoRestante = None
     tempoFinalizacao = None  # indica quando o processo saiu do sistema
+    fila = None  # indica qual fila do feedback ele está
 
     def __init__(self, tempoChegada, prioridade, tempoProcessador, espacoMemoria, qtdImpressora, qtdScanner, qtdModem, qtdCd):
         self.id = id
@@ -27,6 +28,7 @@ class Processo(object):
         self.qtdModem = qtdModem
         self.qtdCd = qtdCd
         self.tempoRestante = self.tempoProcessador
+        self.fila = 1
 
     def imprime_processo(self):
 
