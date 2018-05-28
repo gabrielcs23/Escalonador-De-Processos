@@ -1,10 +1,9 @@
 from cpu import CPU
 from processo import Processo
 from gerencia_inout import GerenciaIO
-from typing import List
 from memoria import Memoria
 from escalonador import escalona_lp
-import escalonadorCurtoPrazo
+from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto
 
 
 class SO(object):
@@ -19,19 +18,6 @@ class SO(object):
     # ideal chamar desaloca seguido de aloca
     # interrupções, vamos fazer separado? Ou colocar nas funções de aloca desaloca por tempo? Acho melhor criar
     # funções para interromper que consideram que essas existem também
-
-    # função feita para inserir processo em uma das listas de processos da memória
-    def insereProcesso(self, processo: Processo, listaProcesso: List[Processo]):
-        for i in range(0, len(listaProcesso)):
-            if processo.prioridade < listaProcesso[i].prioridade:
-                listaProcesso.insert(i, processo)
-                return
-            # se for igual ve por ordem em feedback
-            if processo.prioridade == listaProcesso[i].prioridade:
-                if processo.fila < listaProcesso[i].fila:
-                    listaProcesso.insert(i, processo)
-                    return
-        listaProcesso.append(processo)
 
     def passagemDeTempo(self):
         for cpu in self.cpus:
@@ -64,12 +50,12 @@ def main():
                 processosNovos['tempoReal'].append(filaEntrada.pop(0))
             else:
                 processosNovos['usuario'].append(filaEntrada.pop(0))
-        escalona_lp(so, gerenciaIO, processosProntos, processosProntosSuspenso, processosNovos, memoria)
+        escalona_lp(gerenciaIO, processosProntos, processosProntosSuspenso, processosNovos, memoria)
 
         # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
 
         # Escalonador de curto prazo
-        escalonadorCurtoPrazo.rodadaDeEscalonadorCurto(so, gerenciaIO, processosBloqueados, processosProntos,
+        rodadaDeEscalonadorCurto(so, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
         input()

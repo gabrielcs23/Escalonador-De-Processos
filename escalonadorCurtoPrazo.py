@@ -1,20 +1,20 @@
 from so import SO
 from gerencia_inout import GerenciaIO
 from typing import List
-from processo import Processo
+from processo import Processo, insereProcesso
 
 
 # função principal que faz uma rodada de escalonador.
 def rodadaDeEscalonadorCurto(so: SO, gIO: GerenciaIO, listaBloqueado: List[Processo], listaPronto: List[Processo],
                              listaExecutando: List[Processo], listaFinalizados: List[Processo], cpus):
-    moveBloqueadoParaExecutando(so, listaBloqueado, listaPronto)
+    moveBloqueadoParaExecutando(listaBloqueado, listaPronto)
     alocaProcessosNaCPU(cpus, listaPronto, listaExecutando)
-    verificaIO(so, gIO, listaBloqueado, listaExecutando, cpus)
+    verificaIO(gIO, listaBloqueado, listaExecutando, cpus)
     desalocaProcessosNaCPU(so, cpus, listaPronto, listaExecutando, listaFinalizados)
 
 
 # função que verifica se io chegou e move de bloqueado para executando
-def moveBloqueadoParaExecutando(so: SO, listaBloqueado: List[Processo], listaPronto: List[Processo]):
+def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: List[Processo]):
     for i in range(0, len(listaBloqueado)):
         estaPronto = True
         for io in listaBloqueado[i].listaIO:
@@ -25,7 +25,7 @@ def moveBloqueadoParaExecutando(so: SO, listaBloqueado: List[Processo], listaPro
                 io.livre()
 
             listaBloqueado[i].listaIO = []
-            so.insereProcesso(listaBloqueado[i], listaPronto)
+            insereProcesso(listaBloqueado[i], listaPronto)
             listaBloqueado.pop(i)
 
 
@@ -59,12 +59,12 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
 
 
 # função interrompe com so
-def verificaIO(so: SO, gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
+def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
     for i in range(0, len(cpus)):
         if (cpus[i].processo.qtdImpressora or cpus[i].processo.qtdCd or cpus[i].processo.qtdScanner or
                 cpus[i].processo.qtdModem):
             if cpus[i].quantum == 0 and cpus[i].processo is not None:
-                so.insereProcesso(cpus[i].processo, listaBloqueado)
+                insereProcesso(cpus[i].processo, listaBloqueado)
                 listaExecutando.pop(cpus[i].posicaoLista)
 
                 # verifica quais io precisa e aloca
@@ -108,7 +108,7 @@ def desalocaProcessosNaCPU(so: SO, cpus, listaPronto: List[Processo], listaExecu
                 listaExecutando.pop(cpus[i].posicaoLista)
             # senão coloco na lista de prontos e removo da lista de executando
             else:
-                so.insereProcesso(cpus[i].processo, listaPronto)
+                insereProcesso(cpus[i].processo, listaPronto)
                 if cpus[i].processo.fila == 3:
                     cpus[i].processo.fila = 1
                 else:

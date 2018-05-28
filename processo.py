@@ -1,3 +1,4 @@
+from typing import List
 # essa é a classe responsável por cada instância de processo
 
 
@@ -36,3 +37,17 @@ class Processo(object):
         print("Tempo de chegada: " + str(self.id) + "\n")
         print("Prioridade " + str(self.id) + "\n")
         print("Tamanho " + str(self.id) + "\n")
+
+
+# função feita para inserir processo em uma das listas de processos da memória
+def insereProcesso(self, processo: Processo, listaProcesso: List[Processo]):
+    for i in range(0, len(listaProcesso)):
+        if processo.prioridade < listaProcesso[i].prioridade:
+            listaProcesso.insert(i, processo)
+            return
+        # se for igual ve por ordem em feedback
+        if processo.prioridade == listaProcesso[i].prioridade:
+            if processo.fila < listaProcesso[i].fila:
+                listaProcesso.insert(i, processo)
+                return
+    listaProcesso.append(processo)
