@@ -33,7 +33,7 @@ def main():
     processosProntos = []
     processosProntosSuspenso = []
     processosBloqueados = []
-    processosBloqueadosSuspenso = []
+    processosBloqueadosSuspenso = []  # Não ta sendo passado pra nenhuma função
     processosExecutando = []
     processosFinalizados = []
 
@@ -55,7 +55,7 @@ def main():
         # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
 
         # Escalonador de curto prazo
-        rodadaDeEscalonadorCurto(so, gerenciaIO, processosBloqueados, processosProntos,
+        rodadaDeEscalonadorCurto(so.tempoSistema, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
         input()

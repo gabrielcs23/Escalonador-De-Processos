@@ -1,16 +1,15 @@
-from so import SO
 from gerencia_inout import GerenciaIO
 from typing import List
 from processo import Processo, insereProcesso
 
 
 # função principal que faz uma rodada de escalonador.
-def rodadaDeEscalonadorCurto(so: SO, gIO: GerenciaIO, listaBloqueado: List[Processo], listaPronto: List[Processo],
+def rodadaDeEscalonadorCurto(tempoSistema, gIO: GerenciaIO, listaBloqueado: List[Processo], listaPronto: List[Processo],
                              listaExecutando: List[Processo], listaFinalizados: List[Processo], cpus):
     moveBloqueadoParaExecutando(listaBloqueado, listaPronto)
     alocaProcessosNaCPU(cpus, listaPronto, listaExecutando)
     verificaIO(gIO, listaBloqueado, listaExecutando, cpus)
-    desalocaProcessosNaCPU(so, cpus, listaPronto, listaExecutando, listaFinalizados)
+    desalocaProcessosNaCPU(tempoSistema, cpus, listaPronto, listaExecutando, listaFinalizados)
 
 
 # função que verifica se io chegou e move de bloqueado para executando
@@ -97,13 +96,13 @@ def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
 
 
 # função feita para remover processo da cpu
-def desalocaProcessosNaCPU(so: SO, cpus, listaPronto: List[Processo], listaExecutando, listaFinalizados):
+def desalocaProcessosNaCPU(tempoSistema, cpus, listaPronto: List[Processo], listaExecutando, listaFinalizados):
     for i in range(0, len(cpus)):
         if cpus[i].quantum == 0 and cpus[i].processo is not None:
             # verifica se o processo terminou ou não
             # se sim, então removo da lista de executando, da cpu e coloca na lista de finalizados
             if cpus[i].processo.tempoRestante == 0:
-                cpus[i].processo.tempoFinalizacao = so.tempoSistema
+                cpus[i].processo.tempoFinalizacao = tempoSistema
                 listaFinalizados.append(cpus[i].processo)
                 listaExecutando.pop(cpus[i].posicaoLista)
             # senão coloco na lista de prontos e removo da lista de executando
