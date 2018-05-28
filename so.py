@@ -2,6 +2,9 @@ from cpu import CPU
 from processo import Processo
 from gerencia_inout import GerenciaIO
 from typing import List
+from memoria import Memoria
+from escalonador import escalonador_mp_ativa, escalona_lp, escalona_mp_suspende
+import escalonadorCurtoPrazo
 
 
 class SO(object):
@@ -37,6 +40,7 @@ class SO(object):
         self.gerenciadorIO.atualizaTempoUso()
         self.tempoSistema += 1
 
+
 def main():
     filaEntrada = inicilizarEntrada('entrada.txt')
     processosNovos = {'tempoReal': [], 'usuario': []}
@@ -46,6 +50,24 @@ def main():
     processosBloqueadosSuspenso = []
     processosExecutando = []
     processosFinalizados = []
+
+    so = SO()
+    memoria = Memoria()
+    gerenciaIO = GerenciaIO()
+
+    while True:
+        # Escalonador de longo prazo
+        while len(filaEntrada) > 0 and filaEntrada[0].tempoChegada == so.tempoSistema:  # Isso vai dar certo?
+            if filaEntrada[0].prioridade == 0:
+                processosNovos['tempoReal'].append(filaEntrada.pop(0))
+            else:
+                processosNovos['usuario'].append(filaEntrada.pop(0))
+        escalona_lp(so, gerenciaIO, processosProntos, processosProntosSuspenso, processosNovos, memoria)
+        # Escalonador de médio prazo
+        # Escalonador de curto prazo
+        escalonadorCurtoPrazo.rodadaDeEscalonadorCurto(so, gerenciaIO, processosBloqueados, processosProntos,
+                                                       processosExecutando, processosFinalizados, so.cpus)
+
     # TODO some magic
 
 
