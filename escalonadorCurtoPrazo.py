@@ -60,8 +60,8 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
 # função interrompe com so
 def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
     for i in range(0, len(cpus)):
-        if (cpus[i].processo.qtdImpressora or cpus[i].processo.qtdCd or cpus[i].processo.qtdScanner or
-                cpus[i].processo.qtdModem):
+        if (cpus[i].processo is not None and (cpus[i].processo.qtdImpressora or cpus[i].processo.qtdCd or cpus[i].processo.qtdScanner or
+                cpus[i].processo.qtdModem)):
             if cpus[i].quantum == 0 and cpus[i].processo is not None:
                 insereProcesso(cpus[i].processo, listaBloqueado)
                 listaExecutando.pop(cpus[i].posicaoLista)
