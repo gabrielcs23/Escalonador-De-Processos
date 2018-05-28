@@ -3,7 +3,7 @@ from processo import Processo
 from gerencia_inout import GerenciaIO
 from typing import List
 from memoria import Memoria
-from escalonador import escalonador_mp_ativa, escalona_lp, escalona_mp_suspende
+from escalonador import escalona_lp
 import escalonadorCurtoPrazo
 
 
@@ -55,7 +55,9 @@ def main():
     memoria = Memoria()
     gerenciaIO = GerenciaIO()
 
-    while True:
+    totalProcessos = len(filaEntrada)
+
+    while len(processosFinalizados) != totalProcessos:
         # Escalonador de longo prazo
         while len(filaEntrada) > 0 and filaEntrada[0].tempoChegada == so.tempoSistema:  # Isso vai dar certo?
             if filaEntrada[0].prioridade == 0:
@@ -63,12 +65,16 @@ def main():
             else:
                 processosNovos['usuario'].append(filaEntrada.pop(0))
         escalona_lp(so, gerenciaIO, processosProntos, processosProntosSuspenso, processosNovos, memoria)
-        # Escalonador de médio prazo
+
+        # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
+
         # Escalonador de curto prazo
         escalonadorCurtoPrazo.rodadaDeEscalonadorCurto(so, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
+        # Espera um enter para entrar no próximo loop
+        input()
 
-    # TODO some magic
+    # TODO rest of the magic
 
 
 # arquivo de entrada deve ter cada parametro do processo separado por VIRGULA + ESPAÇO
