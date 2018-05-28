@@ -7,14 +7,14 @@ class IO(object):
         self.emUso = False
         self.tempoUso = TEMPOMAXIMO
         self.processoId = None
+        self.processoBloqueado = False
 
     def isDisponivel(self):
         return not self.emUso
 
     def decrementaTempoUso(self):
         self.tempoUso -= 1
-        if self.tempoUso == 0:
-            self.livre()
+
 
     def livre(self):
         self.tempoUso = TEMPOMAXIMO

@@ -4,6 +4,7 @@
 class Processo(object):
     # atributos da classe
     id = None
+    listaIO = None
     tempoChegada = None
     prioridade = None
     tempoProcessador = None
