@@ -1,5 +1,6 @@
 from cpu import CPU
 from processo import Processo
+from gerencia_inout import GerenciaIO
 
 
 class SO:
@@ -8,12 +9,12 @@ class SO:
     # cria as 4 cpus
     cpus = [CPU() for count in range(4)]
     tempoSistema = 0
+    gerenciadorIO = GerenciaIO()
     listaProcessosFinalizados = []
 
     # ideal chamar desaloca seguido de aloca
     # interrupções, vamos fazer separado? Ou colocar nas funções de aloca desaloca por tempo? Acho melhor criar
     # funções para interromper que consideram que essas existem também
-
 
     # função feita para inserir processo em uma das listas de processos da memória
     def insereProcesso(self, processoT, listaProcesso):
@@ -27,6 +28,13 @@ class SO:
                     listaProcesso.insert(i, processoT)
                     return
         listaProcesso.append(processoT)
+
+    def passagemDeTempo(self):
+        for cpu in self.cpus:
+            cpu.quantum -= 1
+            cpu.processo.tempoProcessador -= 1
+        self.gerenciadorIO.atualizaTempoUso()
+        self.tempoSistema += 1
 
 def main():
     filaEntrada = inicilizarEntrada('entrada.txt')
