@@ -66,9 +66,9 @@ def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSu
                     return
         # mesma analise anterior, porem para a lista de prontos/prontos suspensos
         for i in range(len(processosProntos) - 1, -1, -1):
-            if processosBloqueados[i].prioridade > prioridade:
+            if processosProntos[i].prioridade > prioridade:
                 continue
-            elif processosBloqueados[i].prioridade < prioridade:
+            elif processosProntos[i].prioridade < prioridade:
                 break
             else:
                 SO.insereProcesso(processosProntos[i], processosProntosSuspensos)
@@ -92,13 +92,17 @@ def escalonador_mp_ativa(processosBloqueados, processosBloqueadosSuspensos, proc
             # como a analise é feita do inicio até o final da fila, a fila começa com a prioridade 0 e sobe até 3
             # caso a prioridade seja inferior da analisada, continue
             # caso seja maior, break
-            if processosBloqueadosSuspensos[i].prioridade < prioridade:
+            if processosProntosSuspensos[i].prioridade < prioridade:
                 continue
-            elif processosBloqueadosSuspensos[i].prioridade > prioridade:
+            elif processosProntosSuspensos[i].prioridade > prioridade:
                 break
             else:
                 # se houver espaço na memoria
-                if memoria.m_livre - processosProntosSuspensos[i] > 0:
+                GerIO = GerenciaIO
+                if memoria.m_livre - processosProntosSuspensos[i] > 0 and processosProntosSuspensos[
+                    i].qtdImpressora <= GerIO.qtdImpressoraDisponivel() and processosProntosSuspensos.qtdCd <= GerIO.qtdCdDisponivel() and (
+                        not processosProntosSuspensos.qtdScanner or GerIO.isScannerDisponivel()) and (
+                        not processosProntosSuspensos.qtdModem or GerIO.isModemDisponivel()):
                     # insere na fila de processos prontos, remove da lista de prontos suspenso e atualiza memoria
                     SO.insereProcesso(processosProntosSuspensos[i], processosProntos)
                     memoria.m_livre -= processosProntosSuspensos[i].espacoMemoria
