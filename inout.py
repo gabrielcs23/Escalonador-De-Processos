@@ -7,6 +7,7 @@ class IO(object):
         self.emUso = False
         self.tempoUso = TEMPOMAXIMO
         self.processoId = None
+        self.processoBloqueado = False
 
     def isDisponivel(self):
         return not self.emUso
