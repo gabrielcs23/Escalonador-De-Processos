@@ -1,39 +1,42 @@
 from so import SO
+from gerencia_inout import GerenciaIO
 
 
 # escalonador a longo prazo
-def escalona_lp(fila_processos_prontos, lista_novos, memoria):
+def escalona_lp(fila_processos_prontos, fila_processos_prontos_suspensos, lista_novos, memoria):
     # enquanto a lista de processos novos de tempo real estiver com elementos, faça...
     while len(lista_novos['tempoReal']) > 0:
         # se houver memoria livre pra colocar o proximo processo da lista de novos processos
-        if memoria.m_livre > lista_novos['tempoReal'][0].mbytes:
+        if memoria.m_livre > lista_novos['tempoReal'][0].espacoMemoria:
             # coloca o processo e retira este processo da lista de novos processos
-            SO.insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos)
-            memoria.m_livre -= lista_novos['tempoReal'][0].mbytes
+            SO.insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos_suspensos)
+            memoria.m_livre -= lista_novos['tempoReal'][0].espacoMemoria
             lista_novos['tempoReal'].pop(0)
         else:
-            # libera qtd de memoria suficiente pra inserir o proximo processo na lista de pronto
-            escalona_mp_suspende(lista_novos['tempoReal'][0].mbytes, fila_processos_prontos, memoria)
-            # e agora que possui memoria disponivel, insere o novo processo na lista de prontos
-            SO.insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos)
-            memoria.m_livre -= lista_novos[0].mbytes
+            # coloca o processo na lista de prontos suspensos
+            SO.insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos_suspensos)
             lista_novos['tempoReal'].pop(0)
     # mesma ideia do while anterior, mas para lista de usuario
     while len(lista_novos['usuario']) > 0:
-        if memoria.m_livre > lista_novos['usuario'][0].mbytes:
-            SO.insereProcesso(lista_novos['usuario'][0], fila_processos_prontos)
-            memoria.m_livre -= lista_novos['usuario'][0].mbytes
-            lista_novos['usuario'].pop(0)
+        GerIO = GerenciaIO()
+        if memoria.m_livre > lista_novos['usuario'][0].espacoMemoria:
+            # se o processo possui todos os recursos disponiveis, vai pra fila de pronto
+            if lista_novos['usuario'].qtdImpressora <= GerIO.qtdImpressoraDisponivel() and lista_novos[
+                'usuario'].qtdCd <= GerIO.qtdCdDisponivel() and (
+                    not lista_novos['usuario'].qtdScanner or GerIO.isScannerDisponivel()) and (
+                    not lista_novos['usuario'].qtdModem or GerIO.isModemDisponivel()):
+                SO.insereProcesso(lista_novos['usuario'][0], fila_processos_prontos)
+                memoria.m_livre -= lista_novos['usuario'][0].espacoMemoria
+                lista_novos['usuario'].pop(0)
         else:
-            escalona_mp_suspende(lista_novos['usuario'][0].mbytes, fila_processos_prontos, memoria)
-            SO.insereProcesso(lista_novos['usuario'][0], fila_processos_prontos)
-            memoria.m_livre -= lista_novos['usuario'][0].mbytes
+            SO.insereProcesso(lista_novos['usuario'][0], fila_processos_prontos_suspensos)
             lista_novos['usuario'].pop(0)
 
 
 # escalonador a medio prazo, parte que remove da memoria principal
 # esta funcao libera memoria até ter no minimo uma quantidade (qtd_memoria) livre
-def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSuspensos, processosProntos, processosProntosSuspensos, memoria):
+def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSuspensos, processosProntos,
+                         processosProntosSuspensos, memoria):
     # retira o processo mais recente com prioridade 3 da fila de bloqueado,
     # caso nao exista retira o processo mais recente com prioridade 3 da fila de prontos
 
@@ -42,7 +45,7 @@ def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSu
     # enquanto nao houver (qtd_memoria) memoria disponivel e prioridade for maior ou igual a 0...
     while memoria.m_livre < qtd_memoria and prioridade >= 0:
         # range começa em tamanho da fila -1 (ultimo elemento), vai até 0 (-1 nao incluso) e em passos de -1
-        for i in range(len(processosBloqueados)-1,-1,-1):
+        for i in range(len(processosBloqueados) - 1, -1, -1):
             # como a analise é feita do final até o começo da fila, a fila começa com a prioridade 3 e desce até 0
             # caso a prioridade seja inferior da analisada, break
             # caso seja maior, continue
@@ -55,21 +58,21 @@ def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSu
                 # insere na fila de bloqueado suspenso, remove da fila de bloqueados,
                 # atualiza memoria livre, diminui i para analisar o indice correto da proxima vez
                 SO.insereProcesso(processosBloqueados[i], processosBloqueadosSuspensos)
-                memoria.m_livre += processosBloqueados[i].mbytes
+                memoria.m_livre += processosBloqueados[i].espacoMemoria
                 processosBloqueados.pop(i)
                 i -= 1
                 # caso ja tenha memoria o suficiente, break
                 if memoria.m_livre > qtd_memoria:
                     return
         # mesma analise anterior, porem para a lista de prontos/prontos suspensos
-        for i in range(len(processosProntos)-1,-1,-1):
+        for i in range(len(processosProntos) - 1, -1, -1):
             if processosBloqueados[i].prioridade > prioridade:
                 continue
             elif processosBloqueados[i].prioridade < prioridade:
                 break
             else:
                 SO.insereProcesso(processosProntos[i], processosProntosSuspensos)
-                memoria.m_livre += processosProntos[i].mbytes
+                memoria.m_livre += processosProntos[i].espacoMemoria
                 processosProntos.pop(i)
                 i -= 1
                 if memoria.m_livre > qtd_memoria:
@@ -78,8 +81,9 @@ def escalona_mp_suspende(qtd_memoria, processosBloqueados, processosBloqueadosSu
         prioridade -= 1
 
 
-#insere processos na memoria principal ate a memoria estar cheia ou ate nao ter mais processos que caibam na memoria
-def escalonador_mp_ativa(processosBloqueados, processosBloqueadosSuspensos, processosProntos, processosProntosSuspensos, memoria):
+# insere processos na memoria principal ate a memoria estar cheia ou ate nao ter mais processos que caibam na memoria
+def escalonador_mp_ativa(processosBloqueados, processosBloqueadosSuspensos, processosProntos, processosProntosSuspensos,
+                         memoria):
     # a partir de prioridade 0, insere processos na memoria principal ate a memoria estar cheia
     prioridade = 0
     while prioridade <= 3:
@@ -97,9 +101,9 @@ def escalonador_mp_ativa(processosBloqueados, processosBloqueadosSuspensos, proc
                 if memoria.m_livre - processosProntosSuspensos[i] > 0:
                     # insere na fila de processos prontos, remove da lista de prontos suspenso e atualiza memoria
                     SO.insereProcesso(processosProntosSuspensos[i], processosProntos)
-                    memoria.m_livre -= processosProntosSuspensos[i].mbytes
+                    memoria.m_livre -= processosProntosSuspensos[i].espacoMemoria
                     processosProntosSuspensos.pop(i)
-                    #se nao houver mais memoria, return
+                    # se nao houver mais memoria, return
                     if memoria.m_livre == 0:
                         return
         # mesma ideia do for anterior, mas para a fila de bloqueados suspenso
@@ -111,7 +115,7 @@ def escalonador_mp_ativa(processosBloqueados, processosBloqueadosSuspensos, proc
             else:
                 if memoria.m_livre - processosBloqueadosSuspensos[i] > 0:
                     SO.insereProcesso(processosBloqueadosSuspensos[i], processosBloqueados)
-                    memoria.m_livre -= processosBloqueadosSuspensos[i].mbytes
+                    memoria.m_livre -= processosBloqueadosSuspensos[i].espacoMemoria
                     processosBloqueadosSuspensos.pop(i)
                     if memoria.m_livre == 0:
                         return
