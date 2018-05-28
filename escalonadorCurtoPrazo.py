@@ -4,6 +4,7 @@ from so import SO
 
 class escalonadorCurto:
 
+    gIO = GerenciaIO()
     # função principal que faz uma rodada de escalonador.
     def rodadaDeEscalonadorCurto(self, listaBloqueado, listaPronto, listaExecutando, listaFinalizados, cpus):
         self.moveBloqueadoParaExecutando(listaBloqueado, listaPronto)
@@ -63,31 +64,31 @@ class escalonadorCurto:
                     listaExecutando.pop(cpus[i].posicaoLista)
 
                     # verifica quais io precisa e aloca
-                    if cpus[i].processo.qtdImpressora > 0 and GerenciaIO.qtdImpressoraDisponivel() == listaBloqueado[
+                    if cpus[i].processo.qtdImpressora > 0 and self.gIO.qtdImpressoraDisponivel() == listaBloqueado[
                         i].qtdImpressora:
-                        if GerenciaIO.qtdImpressoraDisponivel() == 1:
-                            GerenciaIO.impressora_1.ocupado(cpus[i].processo.id)
-                            cpus[i].processo.listaIO.append(GerenciaIO.impressora_1)
-                        if GerenciaIO.qtdImpressoraDisponivel() == 2:
-                            GerenciaIO.impressora_1.ocupado(cpus[i].processo.id)
-                            GerenciaIO.impressora_2.ocupado(cpus[i].processo.id)
-                            cpus[i].processo.listaIO.append(GerenciaIO.impressora_1)
-                            cpus[i].processo.listaIO.append(GerenciaIO.impressora_2)
-                    if cpus[i].processo.qtdCd > 0 and GerenciaIO.qtdCdDisponivel() == cpus[i].processo.qtdCd:
-                        if GerenciaIO.qtdCdDisponivel() == 1:
-                            GerenciaIO.cd_1.ocupado(cpus[i].processo.id)
-                            cpus[i].processo.listaIO.append(GerenciaIO.cd_1)
-                        if GerenciaIO.qtdCdDisponivel() == 2:
-                            GerenciaIO.cd_1.ocupado(cpus[i].processo.id)
-                            GerenciaIO.cd_2.ocupado(cpus[i].processo.id)
-                            cpus[i].processo.listaIO.append(GerenciaIO.cd_1)
-                            cpus[i].processo.listaIO.append(GerenciaIO.cd_2)
-                    if cpus[i].processo.qtdScanner > 0 and GerenciaIO.isScannerDisponivel():
-                        GerenciaIO.scanner.ocupado(cpus[i].processo.id)
-                        cpus[i].processo.listaIO.append(GerenciaIO.scanner)
-                    if cpus[i].processo.qtdModem > 0 and GerenciaIO.isModemDisponivel():
-                        GerenciaIO.modem.ocupado(cpus[i].processo.id)
-                        cpus[i].processo.listaIO.append(GerenciaIO.modem)
+                        if self.gIO.qtdImpressoraDisponivel() == 1:
+                            self.gIO.impressora_1.ocupado(cpus[i].processo.id)
+                            cpus[i].processo.listaIO.append(self.gIO.impressora_1)
+                        if self.gIO.qtdImpressoraDisponivel() == 2:
+                            self.gIO.impressora_1.ocupado(cpus[i].processo.id)
+                            self.gIO.impressora_2.ocupado(cpus[i].processo.id)
+                            cpus[i].processo.listaIO.append(self.gIO.impressora_1)
+                            cpus[i].processo.listaIO.append(self.gIO.impressora_2)
+                    if cpus[i].processo.qtdCd > 0 and self.gIO.qtdCdDisponivel() == cpus[i].processo.qtdCd:
+                        if self.gIO.qtdCdDisponivel() == 1:
+                            self.gIO.cd_1.ocupado(cpus[i].processo.id)
+                            cpus[i].processo.listaIO.append(self.gIO.cd_1)
+                        if self.gIO.qtdCdDisponivel() == 2:
+                            self.gIO.cd_1.ocupado(cpus[i].processo.id)
+                            self.gIO.cd_2.ocupado(cpus[i].processo.id)
+                            cpus[i].processo.listaIO.append(self.gIO.cd_1)
+                            cpus[i].processo.listaIO.append(self.gIO.cd_2)
+                    if cpus[i].processo.qtdScanner > 0 and self.gIO.isScannerDisponivel():
+                        self.gIO.scanner.ocupado(cpus[i].processo.id)
+                        cpus[i].processo.listaIO.append(self.gIO.scanner)
+                    if cpus[i].processo.qtdModem > 0 and self.gIO.isModemDisponivel():
+                        self.gIO.modem.ocupado(cpus[i].processo.id)
+                        cpus[i].processo.listaIO.append(self.gIO.modem)
                     cpus[i].processo = None
 
     # função feita para remover processo da cpu
