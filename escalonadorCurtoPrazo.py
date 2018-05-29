@@ -29,6 +29,7 @@ def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: Lis
             listaBloqueado.pop(i)
             i -= 1
         i += 1
+#teste
 
 # função para alocar, caso necessário, o processo da lista de memoria para a cpu
 def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
