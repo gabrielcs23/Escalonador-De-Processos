@@ -40,7 +40,7 @@ class Processo(object):
 
 
 # função feita para inserir processo em uma das listas de processos da memória
-def insereProcesso(self, processo: Processo, listaProcesso: List[Processo]):
+def insereProcesso(processo: Processo, listaProcesso: List[Processo]):
     for i in range(0, len(listaProcesso)):
         if processo.prioridade < listaProcesso[i].prioridade:
             listaProcesso.insert(i, processo)
