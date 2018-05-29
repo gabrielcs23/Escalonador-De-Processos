@@ -59,7 +59,7 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                         cpus[i].quantum = pow(2, cpus[i].processo.fila)
                     listaExecutando.append(cpus[i].processo)
                     listaPronto.pop(0)
-                    i -= 0
+                    i -= 1
         i += 1
 
 
