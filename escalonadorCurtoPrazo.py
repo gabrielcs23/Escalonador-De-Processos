@@ -27,7 +27,8 @@ def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: Lis
             listaBloqueado[i].listaIO = []
             insereProcesso(listaBloqueado[i], listaPronto)
             listaBloqueado.pop(i)
-        i -= 1
+            i -= 1
+        i += 1
 
 # função para alocar, caso necessário, o processo da lista de memoria para a cpu
 def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
@@ -99,6 +100,7 @@ def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
                     gIO.modem.ocupado(cpus[i].processo.id)
                     cpus[i].processo.listaIO.append(gIO.modem)
                 cpus[i].processo = None
+        i += 1
 
 
 # função feita para remover processo da cpu
@@ -112,7 +114,6 @@ def desalocaProcessosNaCPU(tempoSistema, cpus, listaPronto: List[Processo], list
                 cpus[i].processo.tempoFinalizacao = tempoSistema
                 listaFinalizados.append(cpus[i].processo)
                 listaExecutando.pop(cpus[i].posicaoLista)
-                i -= 1
             # senão coloco na lista de prontos e removo da lista de executando
             else:
                 insereProcesso(cpus[i].processo, listaPronto)
@@ -121,5 +122,5 @@ def desalocaProcessosNaCPU(tempoSistema, cpus, listaPronto: List[Processo], list
                 else:
                     cpus[i].processo.fila += 1
                 listaExecutando.pop(cpus[i].posicaoLista)
-                i -= 1
+
         i += 1
