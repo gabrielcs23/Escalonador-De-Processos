@@ -32,10 +32,28 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
     # mesma ideia do while anterior, mas para lista de usuario
     while len(lista_novos['usuario']) > 0:
         # se o processo possui todos os recursos disponiveis, checa memoria
-        if lista_novos['usuario'][0].qtdImpressora <= ger_io.qtdImpressoraDisponivel() and lista_novos[
-            'usuario'][0].qtdCd <= ger_io.qtdCdDisponivel() and (
-                not lista_novos['usuario'][0].qtdScanner or ger_io.isScannerDisponivel()) and (
-                not lista_novos['usuario'][0].qtdModem or ger_io.isModemDisponivel()):
+        impressoras = ger_io.qtdImpressoraDisponivel()
+        for i in fila_processos_prontos:
+            impressoras -= i.qtdImpressora
+        cds = ger_io.qtdCdDisponivel()
+        for i in fila_processos_prontos:
+            cds -= i.qtdCd
+        scanner = ger_io.isScannerDisponivel()
+        for i in fila_processos_prontos:
+            if i.qtdScanner == 1:
+                scanner = scanner and False
+            else:
+                scanner = scanner and True
+        modem = ger_io.isModemDisponivel()
+        for i in fila_processos_prontos:
+            if i.qtdModem == 1:
+                modem = modem and False
+            else:
+                modem = modem and True
+        if lista_novos['usuario'][0].qtdImpressora <= impressoras and lista_novos[
+            'usuario'][0].qtdCd <= cds and (
+                not lista_novos['usuario'][0].qtdScanner or scanner) and (
+                not lista_novos['usuario'][0].qtdModem or modem):
             # se tem memoria, insere na lista de pronto
             if memoria.m_livre >= lista_novos['usuario'][0].espacoMemoria:
                 insereProcesso(lista_novos['usuario'][0], fila_processos_prontos)
@@ -125,11 +143,29 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
                 break
             else:
                 # se houver espaço na memoria
+                impressoras = ger_io.qtdImpressoraDisponivel()
+                for j in fila_processos_prontos:
+                    impressoras -= j.qtdImpressora
+                cds = ger_io.qtdCdDisponivel()
+                for j in fila_processos_prontos:
+                    cds -= j.qtdCd
+                scanner = ger_io.isScannerDisponivel()
+                for j in fila_processos_prontos:
+                    if j.qtdScanner == 1:
+                        scanner = scanner and False
+                    else:
+                        scanner = scanner and True
+                modem = ger_io.isModemDisponivel()
+                for j in fila_processos_prontos:
+                    if j.qtdModem == 1:
+                        modem = modem and False
+                    else:
+                        modem = modem and True
                 if memoria.m_livre - fila_processos_prontos_suspensos[i].espacoMemoria > 0\
-                        and fila_processos_prontos_suspensos[i].qtdImpressora <= ger_io.qtdImpressoraDisponivel()\
-                        and fila_processos_prontos_suspensos[i].qtdCd <= ger_io.qtdCdDisponivel()\
-                        and (not fila_processos_prontos_suspensos[i].qtdScanner or ger_io.isScannerDisponivel())\
-                        and (not fila_processos_prontos_suspensos[i].qtdModem or ger_io.isModemDisponivel()):
+                        and fila_processos_prontos_suspensos[i].qtdImpressora <= impressoras\
+                        and fila_processos_prontos_suspensos[i].qtdCd <= cds\
+                        and (not fila_processos_prontos_suspensos[i].qtdScanner or scanner)\
+                        and (not fila_processos_prontos_suspensos[i].qtdModem or modem):
                     # insere na fila de processos prontos, remove da lista de prontos suspenso e atualiza memoria
                     insereProcesso(fila_processos_prontos_suspensos[i], fila_processos_prontos)
                     memoria.m_livre -= fila_processos_prontos_suspensos[i].espacoMemoria
