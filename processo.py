@@ -5,7 +5,7 @@ from typing import List
 class Processo(object):
     # atributos da classe
     id = None
-    listaIO = None
+    listaIO = []
     tempoChegada = None
     prioridade = None
     tempoProcessador = None
