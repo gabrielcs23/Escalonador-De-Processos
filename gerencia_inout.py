@@ -32,7 +32,7 @@ class GerenciaIO(object):
                 self.impressora_1.ocupado(idProcesso)
             elif self.impressora_2.isDisponivel():
                 self.impressora_2.ocupado(idProcesso)
-        else:
+        elif qtdPraAlocar == 2:
             if self.impressora_1 and self.impressora_2.isDisponivel():
                 self.impressora_1.ocupado(idProcesso)
                 self.impressora_2.ocupado(idProcesso)
@@ -51,7 +51,7 @@ class GerenciaIO(object):
                 self.cd_1.ocupado(idProcesso)
             elif self.cd_2.isDisponivel():
                 self.cd_2.ocupado(idProcesso)
-        else:
+        elif qtdPraAlocar == 2:
             if self.cd_1.isDisponivel() and self.cd_2.isDisponivel():
                 self.cd_1.ocupado(idProcesso)
                 self.cd_2.ocupado(idProcesso)
@@ -59,16 +59,18 @@ class GerenciaIO(object):
     def isScannerDisponivel(self):
         return self.scanner.isDisponivel()
 
-    def alocaScanner(self, idProcesso):
-        if self.isScannerDisponivel():
-            self.scanner.ocupado(idProcesso)
+    def alocaScanner(self, idProcesso, qtdPraAlocar):
+        if qtdPraAlocar != 0:
+            if self.isScannerDisponivel():
+                self.scanner.ocupado(idProcesso)
 
     def isModemDisponivel(self):
         return self.modem.isDisponivel()
 
-    def alocaModem(self, idProcesso):
-        if self.isModemDisponivel():
-            return self.modem.ocupado(idProcesso)
+    def alocaModem(self, idProcesso, qtdPraAlocar):
+        if qtdPraAlocar != 0:
+            if self.isModemDisponivel():
+                self.modem.ocupado(idProcesso)
 
     def atualizaTempoUso(self):
         if self.impressora_1.processoBloqueado:
