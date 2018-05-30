@@ -97,53 +97,43 @@ def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
                 # verifica quais io precisa e aloca
                 if cpus[i].processo.qtdImpressora > 0 and (not gIO.impressora_1.processoBloqueado or not gIO.impressora_2.processoBloqueado):
                     if cpus[i].processo.qtdImpressora==1:
-                        if(gIO.impressora_1.processoId==cpus[i].processo.id and gIO.impressora_1.processoBloqueado):
-                            gIO.impressora_2.ocupado(cpus[i].processo.id)
+                        if(gIO.impressora_1.processoId!=cpus[i].processo.id):
                             gIO.impressora_2.processoBloqueado = True
                             cpus[i].processo.listaIO.append(gIO.impressora_2)
                             cpus[i].processo.qtdImpressora -= 1
-                        elif (not gIO.impressora_2.processoBloqueado):
-                            gIO.impressora_1.ocupado(cpus[i].processo.id)
+                        else:
                             gIO.impressora_1.processoBloqueado=True
                             cpus[i].processo.listaIO.append(gIO.impressora_1)
                             cpus[i].processo.qtdImpressora-=1
 
                     if (not gIO.impressora_1.processoBloqueado and not gIO.impressora_2.processoBloqueado) and cpus[i].processo.qtdImpressora==2:
-                        gIO.impressora_1.ocupado(cpus[i].processo.id)
                         gIO.impressora_1.processoBloqueado=True
-                        gIO.impressora_2.ocupado(cpus[i].processo.id)
                         gIO.impressora_2.processoBloqueado=True
                         cpus[i].processo.qtdImpressora-=2
                         cpus[i].processo.listaIO.append(gIO.impressora_1)
                         cpus[i].processo.listaIO.append(gIO.impressora_2)
                 if cpus[i].processo.qtdCd > 0 and (not gIO.cd_1.processoBloqueado or not gIO.cd_2.processoBloqueado):
                     if cpus[i].processo.qtdCd==1:
-                        if (gIO.cd_1.processoId==cpus[i].processo.id and gIO.cd_1.processoBloqueado):
-                            gIO.cd_2.ocupado(cpus[i].processo.id)
+                        if (gIO.cd_1.processoId!=cpus[i].processo.id):
                             gIO.cd_2.processoBloqueado = True
                             cpus[i].processo.qtdCd -= 1
                             cpus[i].processo.listaIO.append(gIO.cd_2)
-                        elif(not gIO.cd_2.processoBloqueado):
-                            gIO.cd_1.ocupado(cpus[i].processo.id)
+                        else:
                             gIO.cd_1.processoBloqueado=True
                             cpus[i].processo.qtdCd-=1
                             cpus[i].processo.listaIO.append(gIO.cd_1)
                     if (not gIO.cd_1.processoBloqueado and not gIO.cd_2.processoBloqueado) and cpus[i].processo.qtdCd==2:
-                        gIO.cd_1.ocupado(cpus[i].processo.id)
                         gIO.cd_1.processoBloqueado=True
-                        gIO.cd_2.ocupado(cpus[i].processo.id)
                         gIO.cd_2.processoBloqueado=True
                         cpus[i].processo.qtdCd-=2
                         cpus[i].processo.listaIO.append(gIO.cd_1)
                         cpus[i].processo.listaIO.append(gIO.cd_2)
 
                 if cpus[i].processo.qtdScanner > 0 and not gIO.scanner.processoBloqueado:
-                    gIO.scanner.ocupado(cpus[i].processo.id)
                     gIO.scanner.processoBloqueado=True
                     cpus[i].processo.qtdScanner-=1
                     cpus[i].processo.listaIO.append(gIO.scanner)
                 if cpus[i].processo.qtdModem > 0 and not gIO.modem.processoBloqueado:
-                    gIO.modem.ocupado(cpus[i].processo.id)
                     gIO.modem.processoBloqueado=True
                     cpus[i].processo.qtdModem-=1
                     cpus[i].processo.listaIO.append(gIO.modem)
