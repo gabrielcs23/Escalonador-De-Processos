@@ -6,3 +6,6 @@ class CPU:
     posicaoLista = None
     quantum = 0
     tempoTotalProcessamento = None
+
+
+

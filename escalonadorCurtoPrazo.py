@@ -3,6 +3,7 @@ from typing import List
 from processo import Processo, insereProcesso
 
 
+
 # função principal que faz uma rodada de escalonador.
 def rodadaDeEscalonadorCurto(tempoSistema, gIO: GerenciaIO, listaBloqueado: List[Processo], listaPronto: List[Processo],
                              listaExecutando: List[Processo], listaFinalizados: List[Processo], cpus):

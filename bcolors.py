@@ -1,4 +1,3 @@
-# isso aqui é a classe que o Daniel usa pra imprimir colorido no terminal
 
 
 class BColors:  # DEFINIÇÃO DE CORES PARA INTERFACE NO TERMINAL
@@ -10,3 +9,5 @@ class BColors:  # DEFINIÇÃO DE CORES PARA INTERFACE NO TERMINAL
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+

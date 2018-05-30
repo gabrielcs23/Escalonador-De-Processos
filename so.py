@@ -4,7 +4,7 @@ from gerencia_inout import GerenciaIO
 from memoria import Memoria
 from escalonador import escalona_lp
 from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto
-
+from typing import List
 
 class SO(object):
     # NÂO TESTEI NADA AINDA, TO FAZENDO VAMOS TESTAR COM A FUNÇÂO PRINCIPAL
@@ -26,6 +26,45 @@ class SO(object):
         self.gerenciadorIO.atualizaTempoUso()
         self.tempoSistema += 1
 
+    def imprimeSO(self):
+        print("CPUs:\n")
+        for i in range(4):
+            if self.cpus[i].processo is not None:
+                print("CPU" + str(i) +":" + "\tPROCESSO ID=\n" + str(self.cpus[i].processo.id))
+
+        print("\n\nDISPOSITIVOS\t|\tPROCESSO\t|\tTempo I/O\n")
+        print("Impressora 1:"+ str(self.gerenciadorIO.impressora_1.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()))
+        print("Impressora 1:"+ str(self.gerenciadorIO.impressora_2.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_2.getTempoRestante()))
+        print("Impressora 1:"+ str(self.gerenciadorIO.cd_1.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_1.getTempoRestante()))
+        print("Impressora 1:"+ str(self.gerenciadorIO.cd_2.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_2.getTempoRestante()))
+        print("Impressora 1:"+ str(self.gerenciadorIO.modem.processoId) + "\t|\t" + str(self.gerenciadorIO.modem.getTempoRestante()))
+        print("Impressora 1:"+ str(self.gerenciadorIO.scanner.processoId) + "\t|\t" + str(self.gerenciadorIO.scanner.getTempoRestante()))
+
+
+
+def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock : List[Processo],
+                 pBSuspensos  : List[Processo], pExecutando : List[Processo], pFinalizados : List[Processo]):
+    print("\nProntos:")
+    for k in range(len(pProntos)):
+        if pProntos[k] is not None:
+            print("id"+ str(pProntos[k].id) + ", ")
+
+    print("\nPronto-Suspensos:")
+    for k in range(len(pPSuspensos)):
+        if pPSuspensos[k] is not None:
+            print("id" + str(pPSuspensos[k].id) + ", ")
+
+    print("\nBloqueados:")
+    for k in range(len(pBlock)):
+        if pBlock[k] is not None:
+            print("id" + str(pBlock[k].id) + ", ")
+
+    print("\nBloqueado-Suspensos:")
+    for k in range(len(pBSuspensos)):
+        if pBSuspensos[k] is not None:
+            print("id" + str(pBSuspensos[k].id) + ", ")
+
+    print("\n\n")
 
 def main():
     filaEntrada = inicilizarEntrada('entrada.txt')
@@ -58,6 +97,12 @@ def main():
         rodadaDeEscalonadorCurto(so.tempoSistema, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
+
+
+        so.imprimeSO()
+        memoria.imprimeMemoria()
+        imprimeFilas()
+
         input()
 
     # TODO rest of the magic
@@ -65,12 +110,15 @@ def main():
 
 # arquivo de entrada deve ter cada parametro do processo separado por VIRGULA + ESPAÇO
 def inicilizarEntrada(nomeArquivo):
+    identificador = 1
     arquivoEntrada = open(nomeArquivo, 'r')
     filaEntrada = []
     for linha in arquivoEntrada:
         linha.split(', ')
         novoProcesso = Processo(linha[0], linha[1], linha[2], linha[3], linha[4], linha[5], linha[6], linha[7])
+        novoProcesso.id = identificador
         filaEntrada.append(novoProcesso)
+        identificador += 1
     arquivoEntrada.close()
     return filaEntrada
 
