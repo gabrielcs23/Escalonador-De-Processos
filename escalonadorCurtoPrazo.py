@@ -7,16 +7,15 @@ from processo import Processo, insereProcesso
 # função principal que faz uma rodada de escalonador.
 def rodadaDeEscalonadorCurto(tempoSistema, memoria, gIO: GerenciaIO, listaBloqueado: List[Processo], listaPronto: List[Processo],
                              listaExecutando: List[Processo], listaFinalizados: List[Processo], cpus):
+    for p in listaPronto:
+        print(p.id,"/" ,p.tempoRestante)
     moveBloqueadoParaExecutando(listaBloqueado, listaPronto)
     verificaIO(gIO, listaBloqueado, listaExecutando, cpus)
     desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto, listaExecutando, listaFinalizados)
     alocaProcessosNaCPU(cpus, listaPronto, listaExecutando)
-    if(len(listaPronto)>0):
-        print(listaPronto[0].prioridade)
-        print(cpus[0].quantum)
-        print(cpus[1].quantum)
-        print(cpus[2].quantum)
-        print(cpus[3].quantum)
+    for p in listaExecutando:
+        print("Exec",p.id,"/" ,p.tempoRestante)
+
 
 
 # função que verifica se io chegou e move de bloqueado para executando
@@ -55,7 +54,7 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                         cpus[i].quantum = 1
                     else:
                         cpus[i].quantum = cpus[i].processo.tempoRestante
-                        # cpus[i].processo.tempoRestante=0
+                        cpus[i].processo.tempoRestante=0
                     '''
                     listaExecutando.append(cpus[i].processo)
                     listaPronto.pop(0)
@@ -68,8 +67,13 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                             cpus[i].processo.qtdModem):
                         cpus[i].quantum = 1
                     else:
-                        cpus[i].quantum = pow(2, cpus[i].processo.fila)
-                        cpus[i].processo.tempoRestante-=pow(2, cpus[i].processo.fila)
+                        if cpus[i].processo.tempoRestante-pow(2, cpus[i].processo.fila)<=0:
+                            cpus[i].quantum = cpus[i].processo.tempoRestante
+                            cpus[i].processo.tempoRestante=0
+                        else:
+                            cpus[i].quantum = pow(2, cpus[i].processo.fila)
+                            cpus[i].processo.tempoRestante -= pow(2, cpus[i].processo.fila)
+
                 cpus[i].posicaoLista = len(listaExecutando) - 1
                 listaExecutando.append(cpus[i].processo)
                 listaPronto.pop(0)
@@ -137,6 +141,7 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
     i = 0
     while i < len(cpus):
         if cpus[i].quantum == 0 and cpus[i].processo is not None:
+            print("aaa",cpus[i].processo.id,cpus[i].processo.tempoRestante)
             # verifica se o processo terminou ou não
             # se sim, então removo da lista de executando, da cpu e coloca na lista de finalizados
             if cpus[i].processo.tempoRestante == 0:
@@ -156,8 +161,10 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
                     cpus[i].processo.fila += 1
                 listaExecutando.pop(cpus[i].posicaoLista)
                 atualizaPosicaoCPUS(cpus,cpus[i].posicaoLista)
+                cpus[i].processo=None
+                cpus[i].quantum=0
         if cpus[i].processo is not None:
-            if cpus[i].processo.fila>=1 and cpus[i].processo.tempoRestante<=0:
+            if cpus[i].processo.fila>=1 and cpus[i].processo.tempoRestante<=0 and cpus[i].quantum == 0:
                 cpus[i].processo.tempoFinalizacao = tempoSistema
                 listaFinalizados.append(cpus[i].processo)
                 listaExecutando.pop(cpus[i].posicaoLista)

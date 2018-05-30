@@ -24,8 +24,6 @@ class SO(object):
         for cpu in self.cpus:
             if cpu.processo:
                 cpu.quantum -= 1
-            if cpu.processo is not None:
-                cpu.processo.tempoRestante -= 1
 
         self.gerenciadorIO.atualizaTempoUso()
         self.tempoSistema += 1
@@ -111,6 +109,7 @@ def main():
         # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
         if (len(processosProntos) == 0 and len(processosProntosSuspenso) > 0) or (len(processosBloqueados) == 0 and len(processosBloqueadosSuspenso) > 0):
             escalonador_mp_ativa(gerenciaIO, processosProntos,processosProntosSuspenso,processosBloqueados, processosBloqueadosSuspenso, memoria)
+
 
         # Escalonador de curto prazo
         rodadaDeEscalonadorCurto(so.tempoSistema, memoria, so.gerenciadorIO, processosBloqueados, processosProntos,
