@@ -55,7 +55,7 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                         cpus[i].quantum = 1
                     else:
                         cpus[i].quantum = cpus[i].processo.tempoRestante
-                        cpus[i].processo.tempoRestante=0
+                        # cpus[i].processo.tempoRestante=0
                     '''
                     listaExecutando.append(cpus[i].processo)
                     listaPronto.pop(0)

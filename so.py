@@ -25,7 +25,7 @@ class SO(object):
             if cpu.processo:
                 cpu.quantum -= 1
             if cpu.processo is not None:
-                cpu.processo.tempoProcessador -= 1
+                cpu.processo.tempoRestante -= 1
 
         self.gerenciadorIO.atualizaTempoUso()
         self.tempoSistema += 1
