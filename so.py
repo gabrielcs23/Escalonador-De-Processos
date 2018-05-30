@@ -113,11 +113,11 @@ def main():
         rodadaDeEscalonadorCurto(so.tempoSistema, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
-        so.passagemDeTempo()
 
         so.imprimeSO()
         memoria.imprimeMemoria()
         imprimeFilas(processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosFinalizados)
+        so.passagemDeTempo()
 
         input()
 
@@ -130,11 +130,15 @@ def inicilizarEntrada(nomeArquivo):
     arquivoEntrada = open(nomeArquivo, 'r')
     filaEntrada = []
     for linha in arquivoEntrada:
-        linha.split(', ')
+        linha = linha.split(', ')
+        linha = [int(x) for x in linha]
+        for char in linha:
+            print(char)
         novoProcesso = Processo(linha[0], linha[1], linha[2], linha[3], linha[4], linha[5], linha[6], linha[7])
         novoProcesso.id = identificador
         filaEntrada.append(novoProcesso)
         identificador += 1
+
     arquivoEntrada.close()
     return filaEntrada
 
