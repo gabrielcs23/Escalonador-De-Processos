@@ -124,7 +124,7 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
                 break
             else:
                 # se houver espaço na memoria
-                if memoria.m_livre - fila_processos_prontos_suspensos[i] > 0\
+                if memoria.m_livre - fila_processos_prontos_suspensos[i].espacoMemoria > 0\
                         and fila_processos_prontos_suspensos[i].qtdImpressora <= ger_io.qtdImpressoraDisponivel()\
                         and fila_processos_prontos_suspensos[i].qtdCd <= ger_io.qtdCdDisponivel()\
                         and (not fila_processos_prontos_suspensos[i].qtdScanner or ger_io.isScannerDisponivel())\
