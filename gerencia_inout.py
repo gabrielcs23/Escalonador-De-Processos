@@ -64,11 +64,11 @@ class GerenciaIO(object):
             self.scanner.ocupado(idProcesso)
 
     def isModemDisponivel(self):
-        return self.scanner.isDisponivel()
+        return self.modem.isDisponivel()
 
     def alocaModem(self, idProcesso):
         if self.isModemDisponivel():
-            return self.scanner.ocupado(idProcesso)
+            return self.modem.ocupado(idProcesso)
 
     def atualizaTempoUso(self):
         if self.impressora_1.processoBloqueado:

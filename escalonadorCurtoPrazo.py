@@ -24,7 +24,7 @@ def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: Lis
         estaPronto = True
         #verifica todas as entradas e saida e caso ainda precise processar define estaPronto como false
         for io in listaBloqueado[i].listaIO:
-            if io.getTempoRestante() > 0:
+            if io.getTempoRestante() > 0 and io.processoId is not None:
                 estaPronto = False
         #estaPronto indica se a io foi toda finalizada então desbloqueia tudo e torna livre e move o processo para pronto
         if estaPronto:
@@ -134,7 +134,7 @@ def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
                     cpus[i].processo.qtdModem-=1
                     cpus[i].processo.listaIO.append(gIO.modem)
                 cpus[i].processo = None
-                cpus[i].quantum=1
+                cpus[i].quantum=0
         i += 1
 
 
