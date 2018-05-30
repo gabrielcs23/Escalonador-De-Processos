@@ -20,8 +20,8 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
             # se conseguir, insere na lista de prontos
             # caso contrario, insere na lista de prontos suspensos
             escalona_mp_suspende(lista_novos['tempoReal'][0].espacoMemoria,
-                                 subfila_de_prioridade(1, 3, fila_processos_prontos), fila_processos_prontos_suspensos,
-                                 subfila_de_prioridade(1, 3, fila_processos_bloqueados),
+                                 subfila_de_prioridade(1, fila_processos_prontos), fila_processos_prontos_suspensos,
+                                 subfila_de_prioridade(1, fila_processos_bloqueados),
                                  fila_processos_bloqueados_suspensos, memoria)
             if memoria.m_livre >= lista_novos['tempoReal'][0].espacoMemoria:
                 insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos)
@@ -44,10 +44,10 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
                 # caso contrario, tenta liberar memoria
                 escalona_mp_suspende(lista_novos['usuario'][0].espacoMemoria,
                                      subfila_de_prioridade(
-                                         lista_novos['usuario'][0].prioridade, 3, fila_processos_prontos),
+                                         lista_novos['usuario'][0].prioridade, fila_processos_prontos),
                                      fila_processos_prontos_suspensos,
                                      subfila_de_prioridade(
-                                         lista_novos['usuario'][0].prioridade, 3, fila_processos_bloqueados),
+                                         lista_novos['usuario'][0].prioridade, fila_processos_bloqueados),
                                      fila_processos_bloqueados_suspensos, memoria)
                 # se conseguiu liberar memoria, insere na lista de pronto
                 if memoria.m_livre >= lista_novos['usuario'][0].espacoMemoria:
@@ -87,7 +87,6 @@ def escalona_mp_suspende(qtd_memoria,  fila_processos_prontos: List[Processo],
                 insereProcesso(fila_processos_bloqueados[i], fila_processos_bloqueados_suspensos)
                 memoria.m_livre += fila_processos_bloqueados[i].espacoMemoria
                 fila_processos_bloqueados.pop(i)
-                i -= 1
                 # caso ja tenha memoria o suficiente, break
                 if memoria.m_livre > qtd_memoria:
                     return
@@ -101,7 +100,6 @@ def escalona_mp_suspende(qtd_memoria,  fila_processos_prontos: List[Processo],
                 insereProcesso(fila_processos_prontos[i], fila_processos_prontos_suspensos)
                 memoria.m_livre += fila_processos_prontos[i].espacoMemoria
                 fila_processos_prontos.pop(i)
-                i -= 1
                 if memoria.m_livre > qtd_memoria:
                     return
         # diminui prioridade em 1 para analisar a próxima prioridade
@@ -154,13 +152,8 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
         prioridade += 1
 
 
-def subfila_de_prioridade(menor_prioridade:int, maior_prioridade:int, lista:List[Processo]):
-    comeco = 0
-    fim = len(lista) - 1
+def subfila_de_prioridade(menor_prioridade:int, lista:List[Processo]):
     for i in range(len(lista)):
-        if lista[i].prioridade<menor_prioridade:
-            comeco = i
-    for i in range(len(lista)-1, -1, -1):
-        if lista[i].prioridade>maior_prioridade:
-            fim = i
-    return lista[comeco+1:fim]
+        if lista[i].prioridade == menor_prioridade:
+            return lista[i:]
+    return lista
