@@ -3,7 +3,7 @@ from processo import Processo
 from gerencia_inout import GerenciaIO
 from memoria import Memoria
 from escalonador import escalona_lp, escalonador_mp_ativa
-from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto, desalocaProcessosNaCPU
+from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto, moveBloqueadoParaExecutando
 from typing import List
 from bcolors import BColors
 
@@ -123,7 +123,7 @@ def main():
         rodadaDeEscalonadorCurto(so.tempoSistema, memoria, so.gerenciadorIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
 
-
+        #moveBloqueadoParaExecutando(processosBloqueadosSuspenso,processosProntosSuspenso)
         # Espera um enter para entrar no próximo loop
         so.imprimeSO()
         memoria.imprimeMemoria()

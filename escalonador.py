@@ -189,7 +189,7 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
             elif fila_processos_bloqueados_suspensos[i].prioridade > prioridade:
                 break
             else:
-                if memoria.m_livre - fila_processos_bloqueados_suspensos[i] > 0:
+                if memoria.m_livre - fila_processos_bloqueados_suspensos[i].espacoMemoria > 0:
                     insereProcesso(fila_processos_bloqueados_suspensos[i], fila_processos_bloqueados)
                     memoria.m_livre -= fila_processos_bloqueados_suspensos[i].espacoMemoria
                     fila_processos_bloqueados_suspensos.pop(i)
