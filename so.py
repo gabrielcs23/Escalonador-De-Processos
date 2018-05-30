@@ -111,7 +111,7 @@ def main():
         # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
 
         # Escalonador de curto prazo
-        rodadaDeEscalonadorCurto(so.tempoSistema, gerenciaIO, processosBloqueados, processosProntos,
+        rodadaDeEscalonadorCurto(so.tempoSistema, memoria, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
 
