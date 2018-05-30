@@ -33,21 +33,21 @@ class SO(object):
                 print("CPU" + str(i) +":" + "\tPROCESSO ID=\n" + str(self.cpus[i].processo.id))
 
         print("\n\nDISPOSITIVOS\t|\tPROCESSO\t|\tTempo I/O\n")
-        print("Impressora 1:"+ str(self.gerenciadorIO.impressora_1.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()))
-        print("Impressora 1:"+ str(self.gerenciadorIO.impressora_2.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_2.getTempoRestante()))
-        print("Impressora 1:"+ str(self.gerenciadorIO.cd_1.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_1.getTempoRestante()))
-        print("Impressora 1:"+ str(self.gerenciadorIO.cd_2.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_2.getTempoRestante()))
-        print("Impressora 1:"+ str(self.gerenciadorIO.modem.processoId) + "\t|\t" + str(self.gerenciadorIO.modem.getTempoRestante()))
-        print("Impressora 1:"+ str(self.gerenciadorIO.scanner.processoId) + "\t|\t" + str(self.gerenciadorIO.scanner.getTempoRestante()))
+        print("Impressora 1:"+ str("Vazio" if self.gerenciadorIO.impressora_1 is None else self.gerenciadorIO.impressora_1.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()))
+        print("Impressora 2:"+ str("Vazio" if self.gerenciadorIO.impressora_2 is None else self.gerenciadorIO.impressora_2.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_2.getTempoRestante()))
+        print("CD 1:"+ str("Vazio" if self.gerenciadorIO.cd_1 is None else self.gerenciadorIO.cd_1.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_1.getTempoRestante()))
+        print("CD 2:"+ str("Vazio" if self.gerenciadorIO.cd_2 is None else self.gerenciadorIO.cd_2.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_2.getTempoRestante()))
+        print("Modem :"+ str("Vazio" if self.gerenciadorIO.modem is None else self.gerenciadorIO.modem.processoId) + "\t|\t" + str(self.gerenciadorIO.modem.getTempoRestante()))
+        print("Scanner:"+ str("Vazio" if self.gerenciadorIO.scanner is None else self.gerenciadorIO.scanner.processoId) + "\t|\t" + str(self.gerenciadorIO.scanner.getTempoRestante()))
 
 
 
 def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock : List[Processo],
-                 pBSuspensos  : List[Processo], pExecutando : List[Processo], pFinalizados : List[Processo]):
+                 pBSuspensos  : List[Processo], pFinalizados : List[Processo]):
     print("\nProntos:")
     for k in range(len(pProntos)):
         if pProntos[k] is not None:
-            print("id"+ str(pProntos[k].id) + ", ")
+            print("id" + str(pProntos[k].id) + ", ")
 
     print("\nPronto-Suspensos:")
     for k in range(len(pPSuspensos)):
@@ -64,7 +64,14 @@ def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock
         if pBSuspensos[k] is not None:
             print("id" + str(pBSuspensos[k].id) + ", ")
 
+    print("\nFinalizados::")
+    for k in range(len(pFinalizados)):
+        if pFinalizados[k] is not None:
+            print("id" + str(pFinalizados[k].id) + ", ")
+
     print("\n\n")
+
+
 
 def main():
     filaEntrada = inicilizarEntrada('entrada.txt')
@@ -89,7 +96,7 @@ def main():
                 processosNovos['tempoReal'].append(filaEntrada.pop(0))
             else:
                 processosNovos['usuario'].append(filaEntrada.pop(0))
-        escalona_lp(gerenciaIO, processosProntos, processosProntosSuspenso, processosNovos, memoria)
+        escalona_lp(gerenciaIO, processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosNovos, memoria)
 
         # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
 
@@ -98,10 +105,9 @@ def main():
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
 
-
         so.imprimeSO()
         memoria.imprimeMemoria()
-        imprimeFilas()
+        imprimeFilas(processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosFinalizados)
 
         input()
 

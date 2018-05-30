@@ -14,6 +14,6 @@ class Memoria:
         self.m_total = 8192
 
     def imprimeMemoria(self):
-        print("\n\nMEMORIA:\stUSADO: " + str(self.m_total - self.m_livre) + "\nTOTAL: " + str(self.m_total))
+        print("\n\nMEMORIA:\tUSADO: " + str(self.m_total - self.m_livre) + "\nTOTAL: " + str(self.m_total))
 
 
