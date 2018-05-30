@@ -36,7 +36,7 @@ def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: Lis
 def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
     i = 0
     while i < len(cpus):
-        if cpus[i].quantum == 0 and cpus[i].processo is not None:
+        if cpus[i].quantum == 0:
             if len(listaPronto) > 0:
                 # insere um processo de prioridade 0, colocando na lista de executando,
                 # tirando de pronto e arrumando tempos
@@ -48,9 +48,11 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                         cpus[i].quantum = 1
                     else:
                         cpus[i].quantum = cpus[i].processo.tempoRestante
+                    '''
                     listaExecutando.append(cpus[i].processo)
                     listaPronto.pop(0)
                     i -= 1
+                    '''
                 # insere um processo de outra prioridade, arrumando tempo de feedback
                 else:
                     cpus[i].processo = listaPronto[0]
@@ -59,9 +61,10 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                         cpus[i].quantum = 1
                     else:
                         cpus[i].quantum = pow(2, cpus[i].processo.fila)
-                    listaExecutando.append(cpus[i].processo)
-                    listaPronto.pop(0)
-                    i -= 1
+                cpus[i].posicaoLista = len(listaExecutando) - 1
+                listaExecutando.append(cpus[i].processo)
+                listaPronto.pop(0)
+                i -= 1
         i += 1
 
 
