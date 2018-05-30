@@ -1,4 +1,4 @@
-
+from bcolors import BColors
 
 class Memoria:
     m_total = None
@@ -14,6 +14,6 @@ class Memoria:
         self.m_total = 8192
 
     def imprimeMemoria(self):
-        print("\n\nMEMORIA:\tUSADO: " + str(self.m_total - self.m_livre) + "\nTOTAL: " + str(self.m_total))
+        print( BColors.AMARELO +BColors.BOLD + "\n\nMEMORIA:\n\n" + BColors.AZUL + "USADO: " + str(self.m_total - self.m_livre) + "/" + str(self.m_total)+ BColors.ENDC)
 
 

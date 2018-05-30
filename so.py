@@ -5,6 +5,7 @@ from memoria import Memoria
 from escalonador import escalona_lp
 from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto
 from typing import List
+from bcolors import BColors
 
 class SO(object):
     # NÂO TESTEI NADA AINDA, TO FAZENDO VAMOS TESTAR COM A FUNÇÂO PRINCIPAL
@@ -22,29 +23,36 @@ class SO(object):
     def passagemDeTempo(self):
         for cpu in self.cpus:
             cpu.quantum -= 1
-            cpu.processo.tempoProcessador -= 1
+            if cpu.processo is not None:
+                cpu.processo.tempoProcessador -= 1
         self.gerenciadorIO.atualizaTempoUso()
         self.tempoSistema += 1
 
     def imprimeSO(self):
-        print("CPUs:\n")
+        print(BColors.BOLD + BColors.AMARELO + "\n\nTEMPO DE EXECUCAO: " + BColors.ENDC + str(self.tempoSistema))
+        print(BColors.BOLD + BColors.AMARELO + "\nCPUs:\n" + BColors.ENDC)
         for i in range(4):
             if self.cpus[i].processo is not None:
-                print("CPU" + str(i) +":" + "\tPROCESSO ID=\n" + str(self.cpus[i].processo.id))
+                print(BColors.AZUL + BColors.BOLD + "CPU" + str(i) +": " + "\tPROCESSO ID=\n" + BColors.ENDC + str(self.cpus[i].processo.id))
+            else:
+                print(BColors.AZUL + BColors.BOLD + "CPU" + str(i) +": "+ BColors.VERMELHO + "Vazio\n" + BColors.ENDC)
 
-        print("\n\nDISPOSITIVOS\t|\tPROCESSO\t|\tTempo I/O\n")
-        print("Impressora 1:"+ str("Vazio" if self.gerenciadorIO.impressora_1 is None else self.gerenciadorIO.impressora_1.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()))
-        print("Impressora 2:"+ str("Vazio" if self.gerenciadorIO.impressora_2 is None else self.gerenciadorIO.impressora_2.processoId) + "\t|\t" + str(self.gerenciadorIO.impressora_2.getTempoRestante()))
-        print("CD 1:"+ str("Vazio" if self.gerenciadorIO.cd_1 is None else self.gerenciadorIO.cd_1.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_1.getTempoRestante()))
-        print("CD 2:"+ str("Vazio" if self.gerenciadorIO.cd_2 is None else self.gerenciadorIO.cd_2.processoId) + "\t|\t" + str(self.gerenciadorIO.cd_2.getTempoRestante()))
-        print("Modem :"+ str("Vazio" if self.gerenciadorIO.modem is None else self.gerenciadorIO.modem.processoId) + "\t|\t" + str(self.gerenciadorIO.modem.getTempoRestante()))
-        print("Scanner:"+ str("Vazio" if self.gerenciadorIO.scanner is None else self.gerenciadorIO.scanner.processoId) + "\t|\t" + str(self.gerenciadorIO.scanner.getTempoRestante()))
+        print(BColors.AMARELO + BColors.BOLD + "\n\nDISPOSITIVOS\t|\tPROCESSO\t|\tTempo Restante\n" + BColors.ENDC)
+        print(BColors.AZUL + BColors.BOLD + "Impressora 1    \t"+ str(self.gerenciadorIO.impressora_1.processoId) + "\t\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()) + BColors.ENDC)
+        print(BColors.AZUL + BColors.BOLD + "Impressora 2    \t"+ str(self.gerenciadorIO.impressora_2.processoId) + "\t\t|\t" + str(self.gerenciadorIO.impressora_2.getTempoRestante()) + BColors.ENDC)
+        print(BColors.AZUL + BColors.BOLD + "CD 1            \t"+ str(self.gerenciadorIO.cd_1.processoId) + "\t\t|\t" + str(self.gerenciadorIO.cd_1.getTempoRestante()) + BColors.ENDC)
+        print(BColors.AZUL + BColors.BOLD + "CD 2            \t"+ str(self.gerenciadorIO.cd_2.processoId) + "\t\t|\t" + str(self.gerenciadorIO.cd_2.getTempoRestante()) + BColors.ENDC)
+        print(BColors.AZUL + BColors.BOLD + "Modem           \t"+ str(self.gerenciadorIO.modem.processoId) + "\t\t|\t" + str(self.gerenciadorIO.modem.getTempoRestante()) + BColors.ENDC)
+        print(BColors.AZUL + BColors.BOLD + "Scanner         \t"+ str(self.gerenciadorIO.scanner.processoId) + "\t\t|\t" + str(self.gerenciadorIO.scanner.getTempoRestante()) + BColors.ENDC)
 
 
 
 def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock : List[Processo],
                  pBSuspensos  : List[Processo], pFinalizados : List[Processo]):
-    print("\nProntos:")
+
+    print(BColors.AMARELO + BColors.BOLD + "\nFILAS:" + BColors.ENDC)
+
+    print(BColors.AZUL + BColors.BOLD + "\nProntos:")
     for k in range(len(pProntos)):
         if pProntos[k] is not None:
             print("id" + str(pProntos[k].id) + ", ")
@@ -104,6 +112,7 @@ def main():
         rodadaDeEscalonadorCurto(so.tempoSistema, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
+        so.passagemDeTempo()
 
         so.imprimeSO()
         memoria.imprimeMemoria()
