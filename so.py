@@ -82,7 +82,8 @@ def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock
     print("\nFinalizados:")
     for k in range(len(pFinalizados)):
         if pFinalizados[k] is not None:
-            print("id" + str(pFinalizados[k].id) + ", ",end="")
+            print("id" + str(pFinalizados[k].id) + " finalizado no instante: "+ str(pFinalizados[k].tempoFinalizacao) + "\n"
+                  , end="")
 
     print("\n")
 
