@@ -19,6 +19,7 @@ class IO(object):
     def livre(self):
         self.tempoUso = TEMPOMAXIMO
         self.processoId = None
+        self.emUso = False
 
     def getTempoRestante(self):
         return self.tempoUso

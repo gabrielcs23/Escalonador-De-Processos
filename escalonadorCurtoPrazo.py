@@ -95,13 +95,13 @@ def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
                 atualizaPosicaoCPUS(cpus,cpus[i].posicaoLista)
 
                 # verifica quais io precisa e aloca
-                if cpus[i].processo.qtdImpressora > 0 and gIO.qtdImpressoraDisponivel() == listaBloqueado[i].qtdImpressora:
-                    if gIO.qtdImpressoraDisponivel() == 1:
+                if cpus[i].processo.qtdImpressora > 0 and gIO.qtdImpressoraDisponivel() >= 0:
+                    if gIO.qtdImpressoraDisponivel() >= 1 and cpus[i].processo.qtdImpressora==1:
                         gIO.impressora_1.ocupado(cpus[i].processo.id)
                         gIO.impressora_1.processoBloqueado=True
                         cpus[i].processo.listaIO.append(gIO.impressora_1)
                         cpus[i].processo.qtdImpressora-=1
-                    if gIO.qtdImpressoraDisponivel() == 2:
+                    if gIO.qtdImpressoraDisponivel() == 2 and cpus[i].processo.qtdImpressora==2:
                         gIO.impressora_1.ocupado(cpus[i].processo.id)
                         gIO.impressora_1.processoBloqueado=True
                         gIO.impressora_2.ocupado(cpus[i].processo.id)
@@ -109,13 +109,13 @@ def verificaIO(gIO: GerenciaIO, listaBloqueado, listaExecutando, cpus):
                         cpus[i].processo.qtdImpressora-=2
                         cpus[i].processo.listaIO.append(gIO.impressora_1)
                         cpus[i].processo.listaIO.append(gIO.impressora_2)
-                if cpus[i].processo.qtdCd > 0 and gIO.qtdCdDisponivel() == cpus[i].processo.qtdCd:
-                    if gIO.qtdCdDisponivel() == 1:
+                if cpus[i].processo.qtdCd > 0 and gIO.qtdCdDisponivel() >= 0:
+                    if gIO.qtdCdDisponivel() >= 1 and cpus[i].processo.qtdCd==1:
                         gIO.cd_1.ocupado(cpus[i].processo.id)
                         gIO.cd_1.processoBloqueado=True
                         cpus[i].processo.qtdCd-=1
                         cpus[i].processo.listaIO.append(gIO.cd_1)
-                    if gIO.qtdCdDisponivel() == 2:
+                    if gIO.qtdCdDisponivel() == 2 and cpus[i].processo.qtdCd==2:
                         gIO.cd_1.ocupado(cpus[i].processo.id)
                         gIO.cd_1.processoBloqueado=True
                         gIO.cd_2.ocupado(cpus[i].processo.id)

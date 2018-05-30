@@ -121,6 +121,8 @@ def main():
         # Escalonador de curto prazo
         rodadaDeEscalonadorCurto(so.tempoSistema, memoria, so.gerenciadorIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
+
+
         # Espera um enter para entrar no próximo loop
         so.imprimeSO()
         memoria.imprimeMemoria()
