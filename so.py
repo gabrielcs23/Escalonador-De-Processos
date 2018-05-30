@@ -106,14 +106,14 @@ def main():
                 processosNovos['tempoReal'].append(filaEntrada.pop(0))
             else:
                 processosNovos['usuario'].append(filaEntrada.pop(0))
-        escalona_lp(gerenciaIO, processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosNovos, memoria)
+        escalona_lp(so.gerenciadorIO, processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosNovos, memoria)
 
         # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
         if len(processosProntos) == 0 and len(processosProntosSuspenso) > 0:
             escalonador_mp_ativa(gerenciaIO, processosProntos,processosProntosSuspenso,processosBloqueados, processosBloqueadosSuspenso, memoria)
 
         # Escalonador de curto prazo
-        rodadaDeEscalonadorCurto(so.tempoSistema, memoria, gerenciaIO, processosBloqueados, processosProntos,
+        rodadaDeEscalonadorCurto(so.tempoSistema, memoria, so.gerenciadorIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
         so.imprimeSO()
