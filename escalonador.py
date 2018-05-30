@@ -156,4 +156,4 @@ def subfila_de_prioridade(menor_prioridade:int, lista:List[Processo]):
     for i in range(len(lista)):
         if lista[i].prioridade == menor_prioridade:
             return lista[i:]
-    return lista
+    return []
