@@ -118,6 +118,7 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
             # como a analise é feita do inicio até o final da fila, a fila começa com a prioridade 0 e sobe até 3
             # caso a prioridade seja inferior da analisada, continue
             # caso seja maior, break
+            print(fila_processos_prontos_suspensos)
             if fila_processos_prontos_suspensos[i].prioridade < prioridade:
                 continue
             elif fila_processos_prontos_suspensos[i].prioridade > prioridade:
@@ -133,9 +134,11 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
                     insereProcesso(fila_processos_prontos_suspensos[i], fila_processos_prontos)
                     memoria.m_livre -= fila_processos_prontos_suspensos[i].espacoMemoria
                     fila_processos_prontos_suspensos.pop(i)
+                    prioridade -= 1
                     # se nao houver mais memoria, return
                     if memoria.m_livre == 0:
                         return
+                    break
         # mesma ideia do for anterior, mas para a fila de bloqueados suspenso
         for i in range(len(fila_processos_bloqueados_suspensos)):
             if fila_processos_bloqueados_suspensos[i].prioridade < prioridade:
