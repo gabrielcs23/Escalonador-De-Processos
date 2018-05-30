@@ -152,10 +152,12 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
                     fila_processos_bloqueados_suspensos.pop(i)
                     if memoria.m_livre == 0:
                         return
+                    prioridade -= 1
+                    break
         prioridade += 1
 
 
-def subfila_de_prioridade(menor_prioridade:int, lista:List[Processo]):
+def subfila_de_prioridade(menor_prioridade: int, lista: List[Processo]):
     for i in range(len(lista)):
         if lista[i].prioridade == menor_prioridade:
             return lista[i:]
