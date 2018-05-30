@@ -3,7 +3,7 @@ from processo import Processo
 from gerencia_inout import GerenciaIO
 from memoria import Memoria
 from escalonador import escalona_lp
-from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto
+from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto, desalocaProcessosNaCPU
 from typing import List
 from bcolors import BColors
 
@@ -22,7 +22,8 @@ class SO(object):
 
     def passagemDeTempo(self):
         for cpu in self.cpus:
-            cpu.quantum -= 1
+            if cpu.processo:
+                cpu.quantum -= 1
             if cpu.processo is not None:
                 cpu.processo.tempoProcessador -= 1
 
@@ -113,11 +114,11 @@ def main():
         rodadaDeEscalonadorCurto(so.tempoSistema, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
-        so.passagemDeTempo()
 
         so.imprimeSO()
         memoria.imprimeMemoria()
         imprimeFilas(processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosFinalizados)
+        so.passagemDeTempo()
 
         input()
 
@@ -130,11 +131,13 @@ def inicilizarEntrada(nomeArquivo):
     arquivoEntrada = open(nomeArquivo, 'r')
     filaEntrada = []
     for linha in arquivoEntrada:
-        linha.split(', ')
+        linha = linha.split(', ')
+        linha = [int(x) for x in linha]
         novoProcesso = Processo(linha[0], linha[1], linha[2], linha[3], linha[4], linha[5], linha[6], linha[7])
         novoProcesso.id = identificador
         filaEntrada.append(novoProcesso)
         identificador += 1
+
     arquivoEntrada.close()
     return filaEntrada
 
