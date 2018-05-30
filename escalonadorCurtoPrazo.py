@@ -7,14 +7,13 @@ from processo import Processo, insereProcesso
 # função principal que faz uma rodada de escalonador.
 def rodadaDeEscalonadorCurto(tempoSistema, memoria, gIO: GerenciaIO, listaBloqueado: List[Processo], listaPronto: List[Processo],
                              listaExecutando: List[Processo], listaFinalizados: List[Processo], cpus):
-    for p in listaPronto:
-        print(p.id,"/" ,p.tempoRestante)
+
+
     moveBloqueadoParaExecutando(listaBloqueado, listaPronto)
     verificaIO(gIO, listaBloqueado, listaExecutando, cpus)
     desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto, listaExecutando, listaFinalizados)
     alocaProcessosNaCPU(cpus, listaPronto, listaExecutando)
-    for p in listaExecutando:
-        print("Exec",p.id,"/" ,p.tempoRestante)
+
 
 
 
@@ -23,9 +22,11 @@ def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: Lis
     i = 0
     while(i < len(listaBloqueado)):
         estaPronto = True
+        #verifica todas as entradas e saida e caso ainda precise processar define estaPronto como false
         for io in listaBloqueado[i].listaIO:
             if io.getTempoRestante() > 0:
                 estaPronto = False
+        #estaPronto indica se a io foi toda finalizada então desbloqueia tudo e torna livre e move o processo para pronto
         if estaPronto:
             for io in listaBloqueado[i].listaIO:
                 io.livre()
@@ -36,7 +37,7 @@ def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: Lis
             listaBloqueado.pop(i)
             i -= 1
         i += 1
-#teste
+
 
 # função para alocar, caso necessário, o processo da lista de memoria para a cpu
 def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
@@ -67,6 +68,7 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                             cpus[i].processo.qtdModem):
                         cpus[i].quantum = 1
                     else:
+                        #coloca tempo de feedback mas se ficar melhor colocamos o tempo como 0
                         if cpus[i].processo.tempoRestante-pow(2, cpus[i].processo.fila)<=0:
                             cpus[i].quantum = cpus[i].processo.tempoRestante
                             cpus[i].processo.tempoRestante=0
@@ -141,7 +143,6 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
     i = 0
     while i < len(cpus):
         if cpus[i].quantum == 0 and cpus[i].processo is not None:
-            print("aaa",cpus[i].processo.id,cpus[i].processo.tempoRestante)
             # verifica se o processo terminou ou não
             # se sim, então removo da lista de executando, da cpu e coloca na lista de finalizados
             if cpus[i].processo.tempoRestante == 0:
@@ -163,6 +164,7 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
                 atualizaPosicaoCPUS(cpus,cpus[i].posicaoLista)
                 cpus[i].processo=None
                 cpus[i].quantum=0
+        #verifica os processos de feedback
         if cpus[i].processo is not None:
             if cpus[i].processo.fila>=1 and cpus[i].processo.tempoRestante<=0 and cpus[i].quantum == 0:
                 cpus[i].processo.tempoFinalizacao = tempoSistema
@@ -174,7 +176,7 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
                 cpus[i].quantum=0
         i += 1
 
-
+#função para diminuir a posição na lista de executando após tirar um valor de lá
 def atualizaPosicaoCPUS(cpus,i):
     for c in cpus:
         if c.posicaoLista is not None and c.posicaoLista >= i:
