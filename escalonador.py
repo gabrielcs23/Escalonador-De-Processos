@@ -32,14 +32,17 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
         lista_novos['tempoReal'].pop(iterador)
     # mesma ideia do while anterior, mas para lista de usuario
     while iterador < len(lista_novos['usuario']):
-        # se o processo possui todos os recursos disponiveis, checa memoria
+        # pega quantidade de impressora usada atualmente e a qtd que será usada por cada processo na fila de prontos
         impressoras = ger_io.qtdImpressoraDisponivel()
         for i in fila_processos_prontos:
             impressoras -= i.qtdImpressora
+        # faz o mesmo com os outros recursos de E/S
         cds = ger_io.qtdCdDisponivel()
         for i in fila_processos_prontos:
             cds -= i.qtdCd
         scanner = ger_io.isScannerDisponivel()
+        # como scanner e modem retornam um boolean pelo gerenciador de IO
+        # sao verificados por varios AND, e se no final for True, então o scanner/modem esta disponivel
         for i in fila_processos_prontos:
             if i.qtdScanner == 1:
                 scanner = scanner and False
@@ -51,11 +54,12 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
                 modem = modem and False
             else:
                 modem = modem and True
+        # se está tudo disponivel, então
         if lista_novos['usuario'][iterador].qtdImpressora <= impressoras and lista_novos[
             'usuario'][iterador].qtdCd <= cds and (
                 not lista_novos['usuario'][iterador].qtdScanner or scanner) and (
                 not lista_novos['usuario'][iterador].qtdModem or modem):
-            # se tem memoria, insere na lista de pronto
+            # se tem memoria, insere na lista de pronto e aloca os recursos de E/S
             if memoria.m_livre >= lista_novos['usuario'][iterador].espacoMemoria:
                 insereProcesso(lista_novos['usuario'][iterador], fila_processos_prontos)
                 memoria.m_livre -= lista_novos['usuario'][iterador].espacoMemoria
@@ -71,7 +75,7 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
                                      fila_processos_prontos, fila_processos_prontos_suspensos,
                                      fila_processos_bloqueados, fila_processos_bloqueados_suspensos,
                                      lista_novos['usuario'][iterador].prioridade, memoria)
-                # se conseguiu liberar memoria, insere na lista de pronto
+                # se conseguiu liberar memoria, insere na lista de pronto e aloca os recursos de E/S
                 if memoria.m_livre >= lista_novos['usuario'][iterador].espacoMemoria:
                     insereProcesso(lista_novos['usuario'][iterador], fila_processos_prontos)
                     memoria.m_livre -= lista_novos['usuario'][iterador].espacoMemoria
