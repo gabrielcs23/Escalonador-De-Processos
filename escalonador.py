@@ -78,10 +78,10 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
                 if memoria.m_livre >= lista_novos['usuario'][iterador].espacoMemoria:
                     insereProcesso(lista_novos['usuario'][iterador], fila_processos_prontos)
                     memoria.m_livre -= lista_novos['usuario'][iterador].espacoMemoria
-                    ger_io.alocaCd(lista_novos['usuario'][iterador].qtdCd)
-                    ger_io.alocaImpressora(lista_novos['usuario'][iterador].qtdImpressora)
-                    ger_io.alocaScanner(lista_novos['usuario'][iterador].qtdScanner)
-                    ger_io.alocaModem(lista_novos['usuario'][iterador].qtdModem)
+                    ger_io.alocaCd(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdCd)
+                    ger_io.alocaImpressora(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdImpressora)
+                    ger_io.alocaScanner(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdScanner)
+                    ger_io.alocaModem(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdModem)
                     lista_novos['usuario'].pop(iterador)
                     iterador -= 1
         iterador += 1
