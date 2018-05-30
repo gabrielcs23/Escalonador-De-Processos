@@ -11,7 +11,12 @@ def rodadaDeEscalonadorCurto(tempoSistema, memoria, gIO: GerenciaIO, listaBloque
     verificaIO(gIO, listaBloqueado, listaExecutando, cpus)
     desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto, listaExecutando, listaFinalizados)
     alocaProcessosNaCPU(cpus, listaPronto, listaExecutando)
-
+    if(len(listaPronto)>0):
+        print(listaPronto[0].prioridade)
+        print(cpus[0].quantum)
+        print(cpus[1].quantum)
+        print(cpus[2].quantum)
+        print(cpus[3].quantum)
 
 
 # função que verifica se io chegou e move de bloqueado para executando
@@ -141,6 +146,7 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
                 atualizaPosicaoCPUS(cpus,cpus[i].posicaoLista)
                 memoria.m_livre+=cpus[i].processo.espacoMemoria
                 cpus[i].processo=None
+                cpus[i].quantum=0
             # senão coloco na lista de prontos e removo da lista de executando
             else:
                 insereProcesso(cpus[i].processo, listaPronto)
@@ -158,6 +164,7 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
                 atualizaPosicaoCPUS(cpus, cpus[i].posicaoLista)
                 memoria.m_livre += cpus[i].processo.espacoMemoria
                 cpus[i].processo = None
+                cpus[i].quantum=0
         i += 1
 
 def atualizaPosicaoCPUS(cpus,i):
