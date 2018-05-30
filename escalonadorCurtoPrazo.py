@@ -167,7 +167,8 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
                 cpus[i].quantum=0
         i += 1
 
+
 def atualizaPosicaoCPUS(cpus,i):
     for c in cpus:
-        if(c.posicaoLista>=i):
+        if c.posicaoLista is not None and c.posicaoLista >= i:
             c.posicaoLista-=1
