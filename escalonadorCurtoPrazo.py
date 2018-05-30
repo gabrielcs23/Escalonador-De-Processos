@@ -169,11 +169,11 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
                 cpus[i].quantum=0
             # senão coloco na lista de prontos e removo da lista de executando
             else:
-                insereProcesso(cpus[i].processo, listaPronto)
                 if cpus[i].processo.fila == 3:
                     cpus[i].processo.fila = 1
                 else:
                     cpus[i].processo.fila += 1
+                insereProcesso(cpus[i].processo, listaPronto)
                 listaExecutando.pop(cpus[i].posicaoLista)
                 atualizaPosicaoCPUS(cpus,cpus[i].posicaoLista)
                 cpus[i].processo=None
