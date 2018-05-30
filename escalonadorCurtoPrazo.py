@@ -7,14 +7,13 @@ from processo import Processo, insereProcesso
 # função principal que faz uma rodada de escalonador.
 def rodadaDeEscalonadorCurto(tempoSistema, memoria, gIO: GerenciaIO, listaBloqueado: List[Processo], listaPronto: List[Processo],
                              listaExecutando: List[Processo], listaFinalizados: List[Processo], cpus):
-    for p in listaPronto:
-        print(p.id,"/" ,p.tempoRestante)
+
+
     moveBloqueadoParaExecutando(listaBloqueado, listaPronto)
     verificaIO(gIO, listaBloqueado, listaExecutando, cpus)
     desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto, listaExecutando, listaFinalizados)
     alocaProcessosNaCPU(cpus, listaPronto, listaExecutando)
-    for p in listaExecutando:
-        print("Exec",p.id,"/" ,p.tempoRestante)
+
 
 
 
@@ -141,7 +140,6 @@ def desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto: List[Proces
     i = 0
     while i < len(cpus):
         if cpus[i].quantum == 0 and cpus[i].processo is not None:
-            print("aaa",cpus[i].processo.id,cpus[i].processo.tempoRestante)
             # verifica se o processo terminou ou não
             # se sim, então removo da lista de executando, da cpu e coloca na lista de finalizados
             if cpus[i].processo.tempoRestante == 0:
