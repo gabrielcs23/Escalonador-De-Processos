@@ -2,7 +2,7 @@ from cpu import CPU
 from processo import Processo
 from gerencia_inout import GerenciaIO
 from memoria import Memoria
-from escalonador import escalona_lp
+from escalonador import escalona_lp, escalonador_mp_ativa
 from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto, desalocaProcessosNaCPU
 from typing import List
 from bcolors import BColors
@@ -109,12 +109,13 @@ def main():
         escalona_lp(gerenciaIO, processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosNovos, memoria)
 
         # Escalonador de médio prazo (acho que não vai ser chamado explicitamente, só indiremantente pro swap)
+        if len(processosProntos) == 0 and len(processosProntosSuspenso) > 0:
+            escalonador_mp_ativa(gerenciaIO, processosProntos,processosProntosSuspenso,processosBloqueados, processosBloqueadosSuspenso, memoria)
 
         # Escalonador de curto prazo
         rodadaDeEscalonadorCurto(so.tempoSistema, memoria, gerenciaIO, processosBloqueados, processosProntos,
                                                        processosExecutando, processosFinalizados, so.cpus)
         # Espera um enter para entrar no próximo loop
-
         so.imprimeSO()
         memoria.imprimeMemoria()
         imprimeFilas(processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosFinalizados)
