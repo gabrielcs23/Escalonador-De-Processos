@@ -8,29 +8,30 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
                 fila_processos_prontos_suspensos: List[Processo], fila_processos_bloqueados: List[Processo],
                 fila_processos_bloqueados_suspensos: List[Processo], lista_novos: Dict, memoria):
     # enquanto a lista de processos novos de tempo real estiver com elementos, faça...
+    iterador = 0
     while len(lista_novos['tempoReal']) > 0:
         # se houver memoria livre pra colocar o proximo processo da lista de novos processos
-        if memoria.m_livre >= lista_novos['tempoReal'][0].espacoMemoria:
+        if memoria.m_livre >= lista_novos['tempoReal'][iterador].espacoMemoria:
             # coloca o processo e retira este processo da lista de novos processos
-            insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos)
-            memoria.m_livre -= lista_novos['tempoReal'][0].espacoMemoria
+            insereProcesso(lista_novos['tempoReal'][iterador], fila_processos_prontos)
+            memoria.m_livre -= lista_novos['tempoReal'][iterador].espacoMemoria
         else:
             # tenta liberar espaço para inserir processo
             # libera os processos de prioridade maior (>0)
             # se conseguir, insere na lista de prontos
             # caso contrario, insere na lista de prontos suspensos
-            escalona_mp_suspende(lista_novos['tempoReal'][0].espacoMemoria,
+            escalona_mp_suspende(lista_novos['tempoReal'][iterador].espacoMemoria,
                                  subfila_de_prioridade(1, fila_processos_prontos), fila_processos_prontos_suspensos,
                                  subfila_de_prioridade(1, fila_processos_bloqueados),
                                  fila_processos_bloqueados_suspensos, memoria)
-            if memoria.m_livre >= lista_novos['tempoReal'][0].espacoMemoria:
-                insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos)
-                memoria.m_livre -= lista_novos['tempoReal'][0].espacoMemoria
+            if memoria.m_livre >= lista_novos['tempoReal'][iterador].espacoMemoria:
+                insereProcesso(lista_novos['tempoReal'][iterador], fila_processos_prontos)
+                memoria.m_livre -= lista_novos['tempoReal'][iterador].espacoMemoria
             else:
-                insereProcesso(lista_novos['tempoReal'][0], fila_processos_prontos_suspensos)
-        lista_novos['tempoReal'].pop(0)
+                insereProcesso(lista_novos['tempoReal'][iterador], fila_processos_prontos_suspensos)
+        lista_novos['tempoReal'].pop(iterador)
     # mesma ideia do while anterior, mas para lista de usuario
-    while len(lista_novos['usuario']) > 0:
+    while iterador < len(lista_novos['usuario']):
         # se o processo possui todos os recursos disponiveis, checa memoria
         impressoras = ger_io.qtdImpressoraDisponivel()
         for i in fila_processos_prontos:
@@ -50,30 +51,40 @@ def escalona_lp(ger_io: GerenciaIO, fila_processos_prontos: List[Processo],
                 modem = modem and False
             else:
                 modem = modem and True
-        if lista_novos['usuario'][0].qtdImpressora <= impressoras and lista_novos[
-            'usuario'][0].qtdCd <= cds and (
-                not lista_novos['usuario'][0].qtdScanner or scanner) and (
-                not lista_novos['usuario'][0].qtdModem or modem):
+        if lista_novos['usuario'][iterador].qtdImpressora <= impressoras and lista_novos[
+            'usuario'][iterador].qtdCd <= cds and (
+                not lista_novos['usuario'][iterador].qtdScanner or scanner) and (
+                not lista_novos['usuario'][iterador].qtdModem or modem):
             # se tem memoria, insere na lista de pronto
-            if memoria.m_livre >= lista_novos['usuario'][0].espacoMemoria:
-                insereProcesso(lista_novos['usuario'][0], fila_processos_prontos)
-                memoria.m_livre -= lista_novos['usuario'][0].espacoMemoria
+            if memoria.m_livre >= lista_novos['usuario'][iterador].espacoMemoria:
+                insereProcesso(lista_novos['usuario'][iterador], fila_processos_prontos)
+                memoria.m_livre -= lista_novos['usuario'][iterador].espacoMemoria
+                ger_io.alocaCd(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdCd)
+                ger_io.alocaImpressora(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdImpressora)
+                ger_io.alocaScanner(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdScanner)
+                ger_io.alocaModem(lista_novos['usuario'][iterador].id, lista_novos['usuario'][iterador].qtdModem)
+                lista_novos['usuario'].pop(iterador)
+                iterador -= 1
             else:
                 # caso contrario, tenta liberar memoria
-                escalona_mp_suspende(lista_novos['usuario'][0].espacoMemoria,
+                escalona_mp_suspende(lista_novos['usuario'][iterador].espacoMemoria,
                                      subfila_de_prioridade(
-                                         lista_novos['usuario'][0].prioridade, fila_processos_prontos),
+                                         lista_novos['usuario'][iterador].prioridade, fila_processos_prontos),
                                      fila_processos_prontos_suspensos,
                                      subfila_de_prioridade(
-                                         lista_novos['usuario'][0].prioridade, fila_processos_bloqueados),
+                                         lista_novos['usuario'][iterador].prioridade, fila_processos_bloqueados),
                                      fila_processos_bloqueados_suspensos, memoria)
                 # se conseguiu liberar memoria, insere na lista de pronto
-                if memoria.m_livre >= lista_novos['usuario'][0].espacoMemoria:
-                    insereProcesso(lista_novos['usuario'][0], fila_processos_prontos)
-                    memoria.m_livre -= lista_novos['usuario'][0].espacoMemoria
-        else:
-            insereProcesso(lista_novos['usuario'][0], fila_processos_prontos_suspensos)
-        lista_novos['usuario'].pop(0)
+                if memoria.m_livre >= lista_novos['usuario'][iterador].espacoMemoria:
+                    insereProcesso(lista_novos['usuario'][iterador], fila_processos_prontos)
+                    memoria.m_livre -= lista_novos['usuario'][iterador].espacoMemoria
+                    ger_io.alocaCd(lista_novos['usuario'][iterador].qtdCd)
+                    ger_io.alocaImpressora(lista_novos['usuario'][iterador].qtdImpressora)
+                    ger_io.alocaScanner(lista_novos['usuario'][iterador].qtdScanner)
+                    ger_io.alocaModem(lista_novos['usuario'][iterador].qtdModem)
+                    lista_novos['usuario'].pop(iterador)
+                    iterador -= 1
+        iterador += 1
 
 
 # escalonador a medio prazo, parte que remove da memoria principal
@@ -136,7 +147,6 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
             # como a analise é feita do inicio até o final da fila, a fila começa com a prioridade 0 e sobe até 3
             # caso a prioridade seja inferior da analisada, continue
             # caso seja maior, break
-            print(fila_processos_prontos_suspensos)
             if fila_processos_prontos_suspensos[i].prioridade < prioridade:
                 continue
             elif fila_processos_prontos_suspensos[i].prioridade > prioridade:
