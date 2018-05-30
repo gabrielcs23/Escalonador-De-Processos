@@ -14,6 +14,6 @@ class Memoria:
         self.m_total = 8192
 
     def imprimeMemoria(self):
-        print( BColors.AMARELO +BColors.BOLD + "\n\nMEMORIA:\n\n" + BColors.AZUL + "USADO: " + str(self.m_total - self.m_livre) + "/" + str(self.m_total)+ BColors.ENDC)
+        print( BColors.AMARELO +BColors.BOLD + "\nMEMORIA:\n\n" + BColors.AZUL + "USADO: " + str(self.m_total - self.m_livre) + "/" + str(self.m_total)+ BColors.ENDC)
 
 

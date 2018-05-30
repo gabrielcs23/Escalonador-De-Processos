@@ -31,11 +31,18 @@ class SO(object):
     def imprimeSO(self):
         print(BColors.BOLD + BColors.AMARELO + "\n\nTEMPO DE EXECUCAO: " + BColors.ENDC + str(self.tempoSistema))
         print(BColors.BOLD + BColors.AMARELO + "\nCPUs:\n" + BColors.ENDC)
+        print("+-------+-------+-------+-------+")
+        print("| CPU 0 | CPU 1 | CPU 2 | CPU 3 |")
+        print("+-------+-------+-------+-------+")
+        print("|",end="")
         for i in range(4):
             if self.cpus[i].processo is not None:
-                print(BColors.AZUL + BColors.BOLD + "CPU" + str(i) +": " + "\tPROCESSO ID=\n" + BColors.ENDC + str(self.cpus[i].processo.id))
+                print(BColors.AZUL + BColors.BOLD + " ID= " + BColors.ENDC + str(self.cpus[i].processo.id)+" ",end="")
             else:
-                print(BColors.AZUL + BColors.BOLD + "CPU" + str(i) +": "+ BColors.VERMELHO + "Vazio\n" + BColors.ENDC)
+                print(BColors.AZUL + BColors.BOLD + BColors.VERMELHO + " Vazio " + BColors.ENDC,end="")
+            print("|",end="")
+        print()
+        print("+-------+-------+-------+-------+")
 
         print(BColors.AMARELO + BColors.BOLD + "\n\nDISPOSITIVOS\t|\tPROCESSO\t|\tTempo Restante\n" + BColors.ENDC)
         print(BColors.AZUL + BColors.BOLD + "Impressora 1    \t"+ str(self.gerenciadorIO.impressora_1.processoId) + "\t\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()) + BColors.ENDC)
@@ -55,29 +62,29 @@ def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock
     print(BColors.AZUL + BColors.BOLD + "\nProntos:")
     for k in range(len(pProntos)):
         if pProntos[k] is not None:
-            print("id" + str(pProntos[k].id) + ", ")
+            print("id" + str(pProntos[k].id) + ", ",end="")
 
     print("\nPronto-Suspensos:")
     for k in range(len(pPSuspensos)):
         if pPSuspensos[k] is not None:
-            print("id" + str(pPSuspensos[k].id) + ", ")
+            print("id" + str(pPSuspensos[k].id) + ", ",end="")
 
     print("\nBloqueados:")
     for k in range(len(pBlock)):
         if pBlock[k] is not None:
-            print("id" + str(pBlock[k].id) + ", ")
+            print("id" + str(pBlock[k].id) + ", ",end="")
 
     print("\nBloqueado-Suspensos:")
     for k in range(len(pBSuspensos)):
         if pBSuspensos[k] is not None:
-            print("id" + str(pBSuspensos[k].id) + ", ")
+            print("id" + str(pBSuspensos[k].id) + ", ",end="")
 
-    print("\nFinalizados::")
+    print("\nFinalizados:")
     for k in range(len(pFinalizados)):
         if pFinalizados[k] is not None:
-            print("id" + str(pFinalizados[k].id) + ", ")
+            print("id" + str(pFinalizados[k].id) + ", ",end="")
 
-    print("\n\n")
+    print("\n")
 
 
 
