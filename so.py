@@ -6,6 +6,7 @@ from escalonador import escalona_lp, escalonador_mp_ativa
 from escalonadorCurtoPrazo import rodadaDeEscalonadorCurto, moveBloqueadoParaExecutando
 from typing import List
 from bcolors import BColors
+import os
 
 class SO(object):
     # NÂO TESTEI NADA AINDA, TO FAZENDO VAMOS TESTAR COM A FUNÇÂO PRINCIPAL
@@ -166,15 +167,13 @@ def main():
 
         #moveBloqueadoParaExecutando(processosBloqueadosSuspenso,processosProntosSuspenso)
         # Espera um enter para entrar no próximo loop
+        os.system('cls' if os.name == 'nt' else 'clear')
         so.imprimeSO()
         memoria.imprimeMemoria()
         imprimeFilas(processosProntos, processosProntosSuspenso, processosBloqueados, processosBloqueadosSuspenso, processosFinalizados)
         so.passagemDeTempo()
 
         input()
-
-    # TODO rest of the magic
-
 
 # arquivo de entrada deve ter cada parametro do processo separado por VIRGULA + ESPAÇO
 def inicilizarEntrada(nomeArquivo):
@@ -193,4 +192,4 @@ def inicilizarEntrada(nomeArquivo):
     return filaEntrada
 
 
-main()  # TODO calling magic
+main()
