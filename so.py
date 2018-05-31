@@ -29,29 +29,67 @@ class SO(object):
         self.tempoSistema += 1
 
     def imprimeSO(self):
-        print(BColors.BOLD + BColors.AMARELO + "\n\nTEMPO DE EXECUCAO: " + BColors.ENDC + str(self.tempoSistema))
-        print(BColors.BOLD + BColors.AMARELO + "\nCPUs:\n" + BColors.ENDC)
+        vazio = "--"
+        print(BColors.BOLD + BColors.AMARELO + "\n\nTEMPO DE EXECUCAO: " + BColors.ROSA + str(self.tempoSistema))
+        print(BColors.AMARELO + "\nCPUs:\n" + BColors.AZUL)
         print("+-------+-------+-------+-------+")
         print("| CPU 0 | CPU 1 | CPU 2 | CPU 3 |")
         print("+-------+-------+-------+-------+")
         print("|",end="")
         for i in range(4):
             if self.cpus[i].processo is not None:
-                print(BColors.AZUL + BColors.BOLD + " ID= " + BColors.ENDC + str(self.cpus[i].processo.id)+" ",end="")
+                print(BColors.ROSA + BColors.BOLD + "  P" + str(self.cpus[i].processo.id)+"  ",end="")
             else:
-                print(BColors.AZUL + BColors.BOLD + BColors.VERMELHO + " Vazio " + BColors.ENDC,end="")
-            print("|",end="")
-        print()
+                print(BColors.AZUL + BColors.BOLD + BColors.VERMELHO + "  --  " + BColors.ENDC,end="")
+            print(" " + BColors.AZUL + "|",end="")
+        print(BColors.AZUL)
         print("+-------+-------+-------+-------+")
 
-        print(BColors.AMARELO + BColors.BOLD + "\n\nDISPOSITIVOS\t|\tPROCESSO\t|\tTempo Restante\n" + BColors.ENDC)
-        print(BColors.AZUL + BColors.BOLD + "Impressora 1    \t"+ str(self.gerenciadorIO.impressora_1.processoId) + "\t\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()) + BColors.ENDC)
-        print(BColors.AZUL + BColors.BOLD + "Impressora 2    \t"+ str(self.gerenciadorIO.impressora_2.processoId) + "\t\t|\t" + str(self.gerenciadorIO.impressora_2.getTempoRestante()) + BColors.ENDC)
-        print(BColors.AZUL + BColors.BOLD + "CD 1            \t"+ str(self.gerenciadorIO.cd_1.processoId) + "\t\t|\t" + str(self.gerenciadorIO.cd_1.getTempoRestante()) + BColors.ENDC)
-        print(BColors.AZUL + BColors.BOLD + "CD 2            \t"+ str(self.gerenciadorIO.cd_2.processoId) + "\t\t|\t" + str(self.gerenciadorIO.cd_2.getTempoRestante()) + BColors.ENDC)
-        print(BColors.AZUL + BColors.BOLD + "Modem           \t"+ str(self.gerenciadorIO.modem.processoId) + "\t\t|\t" + str(self.gerenciadorIO.modem.getTempoRestante()) + BColors.ENDC)
-        print(BColors.AZUL + BColors.BOLD + "Scanner         \t"+ str(self.gerenciadorIO.scanner.processoId) + "\t\t|\t" + str(self.gerenciadorIO.scanner.getTempoRestante()) + BColors.ENDC)
+        print(BColors.AMARELO + BColors.BOLD + "\n\nDISPOSITIVOS\t|\tPROCESSO \t|\tTempo Restante\n")
+        if self.gerenciadorIO.impressora_1.processoId is None:
+            print(BColors.AZUL + BColors.BOLD + "Impressora 1    " + BColors.AMARELO + "|\t\t" + BColors.ROSA + vazio + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(self.gerenciadorIO.impressora_1.getTempoRestante()) + BColors.ENDC)
+        else:
+            print(BColors.AZUL + BColors.BOLD + "Impressora 1    " + BColors.AMARELO + "|\t\t" + BColors.ROSA + str(self.gerenciadorIO.impressora_1.processoId) + "\t\t|\t" + str(self.gerenciadorIO.impressora_1.getTempoRestante()) + BColors.ENDC)
 
+        if self.gerenciadorIO.impressora_2.processoId is None:
+            print(BColors.AZUL + BColors.BOLD + "Impressora 2    " + BColors.AMARELO + "|\t\t" + BColors.ROSA + vazio + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.impressora_2.getTempoRestante()) + BColors.ENDC)
+        else:
+            print(BColors.AZUL + BColors.BOLD + "Impressora 2     \t" + str(
+                self.gerenciadorIO.impressora_2.processoId) + "\t\t|\t" + str(
+                self.gerenciadorIO.impressora_2.getTempoRestante()) + BColors.ENDC)
+
+        if self.gerenciadorIO.cd_1.processoId is None:
+            print(BColors.AZUL + BColors.BOLD + "CD 1            " + BColors.AMARELO + "|\t\t" + BColors.ROSA + vazio + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.cd_1.getTempoRestante()) + BColors.ENDC)
+        else:
+            print(BColors.AZUL + BColors.BOLD + "CD 1            " + BColors.AMARELO + "|\t\t" + BColors.ROSA + "P" + str(
+                self.gerenciadorIO.cd_1.processoId) + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.cd_1.getTempoRestante()) + BColors.ENDC)
+
+        if self.gerenciadorIO.cd_2.processoId is None:
+            print(BColors.AZUL + BColors.BOLD + "CD 2            " + BColors.AMARELO + "|\t\t" + BColors.ROSA + vazio + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.cd_2.getTempoRestante()) + BColors.ENDC)
+        else:
+            print(BColors.AZUL + BColors.BOLD + "CD 2            " + BColors.AMARELO + "|\t\t" + BColors.ROSA + "P" + str(
+                self.gerenciadorIO.cd_2.processoId) + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.cd_2.getTempoRestante()) + BColors.ENDC)
+
+        if self.gerenciadorIO.modem.processoId is None:
+            print(BColors.AZUL + BColors.BOLD + "Modem           " + BColors.AMARELO + "|\t\t" + BColors.ROSA + vazio + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.modem.getTempoRestante()) + BColors.ENDC)
+        else:
+            print(BColors.AZUL + BColors.BOLD + "Modem           " + BColors.AMARELO + "|\t\t" + BColors.ROSA + "P" + str(
+                self.gerenciadorIO.modem.processoId) + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.modem.getTempoRestante()) + BColors.ENDC)
+
+        if self.gerenciadorIO.scanner.processoId is None:
+            print(BColors.AZUL + BColors.BOLD + "Scanner         " + BColors.AMARELO + "|\t\t" + BColors.ROSA + vazio + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.scanner.getTempoRestante()) + BColors.ENDC)
+        else:
+            print(BColors.AZUL + BColors.BOLD + "Scanner         " + BColors.AMARELO + "|\t\t" + BColors.ROSA + "P" + str(
+                self.gerenciadorIO.scanner.processoId) + BColors.AMARELO + "\t\t|\t" + BColors.ROSA + str(
+                self.gerenciadorIO.scanner.getTempoRestante()) + BColors.ENDC)
 
 
 def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock : List[Processo],
@@ -59,30 +97,33 @@ def imprimeFilas(pProntos : List[Processo], pPSuspensos : List[Processo], pBlock
 
     print(BColors.AMARELO + BColors.BOLD + "\nFILAS:" + BColors.ENDC)
 
-    print(BColors.AZUL + BColors.BOLD + "\nProntos:")
+    print(BColors.AZUL + BColors.BOLD + "\nNovos:" + BColors.ROSA )
+
+
+    print(BColors.AZUL + BColors.BOLD + "\nProntos:" + BColors.ROSA )
     for k in range(len(pProntos)):
         if pProntos[k] is not None:
-            print("id" + str(pProntos[k].id) + ", ",end="")
+            print("P" + str(pProntos[k].id) + ", ",end="")
 
-    print("\nPronto-Suspensos:")
+    print(BColors.AZUL + BColors.BOLD + "\nPronto-Suspensos:" + BColors.ROSA)
     for k in range(len(pPSuspensos)):
         if pPSuspensos[k] is not None:
-            print("id" + str(pPSuspensos[k].id) + ", ",end="")
+            print("P" + str(pPSuspensos[k].id) + ", ",end="")
 
-    print("\nBloqueados:")
+    print(BColors.AZUL + BColors.BOLD + "\nBloqueados:" + BColors.ROSA)
     for k in range(len(pBlock)):
         if pBlock[k] is not None:
-            print("id" + str(pBlock[k].id) + ", ",end="")
+            print("P" + str(pBlock[k].id) + ", ",end="")
 
-    print("\nBloqueado-Suspensos:")
+    print(BColors.AZUL + BColors.BOLD + "\nBloqueado-Suspensos:" + BColors.ROSA)
     for k in range(len(pBSuspensos)):
         if pBSuspensos[k] is not None:
-            print("id" + str(pBSuspensos[k].id) + ", ",end="")
+            print("P" + str(pBSuspensos[k].id) + ", ",end="" + BColors.ROSA)
 
-    print("\nFinalizados:")
+    print(BColors.AZUL + BColors.BOLD + "\nFinalizados:" + BColors.ROSA)
     for k in range(len(pFinalizados)):
         if pFinalizados[k] is not None:
-            print("id" + str(pFinalizados[k].id) + " finalizado no instante: "+ str(pFinalizados[k].tempoFinalizacao) + "\n"
+            print("P" + str(pFinalizados[k].id) + BColors.AZUL + " entrou na cpu em " + BColors.ROSA + "T=" + str(pFinalizados[k].tempoInicial) + BColors.AZUL + " e finalizou em " + BColors.ROSA + "T=" + str(pFinalizados[k].tempoFinalizacao) + "\n"
                   , end="")
 
     print("\n")
