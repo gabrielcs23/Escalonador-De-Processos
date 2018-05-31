@@ -99,7 +99,7 @@ def escalona_mp_suspende(qtd_memoria,  fila_processos_prontos: List[Processo],
     # repete os passos acima com prioridade 2, 1, e 0, nesta ordem
     prioridade = 3
     # enquanto nao houver (qtd_memoria) memoria disponivel e prioridade for maior ou igual a 0...
-    while memoria.m_livre < qtd_memoria and prioridade > prioridade_min:
+    while memoria.m_livre <= qtd_memoria and prioridade > prioridade_min:
         # range começa em tamanho da fila -1 (ultimo elemento), vai até 0 (-1 nao incluso) e em passos de -1
         for i in range(len(fila_processos_bloqueados) - 1, -1, -1):
             # como a analise é feita do final até o começo da fila, a fila começa com a prioridade 3 e desce até 0
@@ -172,7 +172,7 @@ def escalonador_mp_ativa(ger_io: GerenciaIO, fila_processos_prontos: List[Proces
                         modem = modem and False
                     else:
                         modem = modem and True
-                if memoria.m_livre - fila_processos_prontos_suspensos[i].espacoMemoria > 0\
+                if memoria.m_livre - fila_processos_prontos_suspensos[i].espacoMemoria >= 0\
                         and fila_processos_prontos_suspensos[i].qtdImpressora <= impressoras\
                         and fila_processos_prontos_suspensos[i].qtdCd <= cds\
                         and (not fila_processos_prontos_suspensos[i].qtdScanner or scanner)\
