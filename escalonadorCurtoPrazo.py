@@ -12,7 +12,7 @@ def rodadaDeEscalonadorCurto(tempoSistema, memoria, gIO: GerenciaIO, listaBloque
     moveBloqueadoParaExecutando(listaBloqueado, listaPronto)
     verificaIO(gIO, listaBloqueado, listaExecutando, cpus)
     desalocaProcessosNaCPU(tempoSistema, memoria, cpus, listaPronto, listaExecutando, listaFinalizados)
-    alocaProcessosNaCPU(cpus, listaPronto, listaExecutando)
+    alocaProcessosNaCPU(cpus, listaPronto, listaExecutando,tempoSistema)
 
 
 
@@ -40,7 +40,7 @@ def moveBloqueadoParaExecutando(listaBloqueado: List[Processo], listaPronto: Lis
 
 
 # função para alocar, caso necessário, o processo da lista de memoria para a cpu
-def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
+def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando,tempoSistema):
     i = 0
     while i < len(cpus):
         if cpus[i].quantum == 0 :
@@ -79,6 +79,8 @@ def alocaProcessosNaCPU(cpus, listaPronto, listaExecutando):
                 cpus[i].posicaoLista = len(listaExecutando) - 1
                 listaExecutando.append(cpus[i].processo)
                 listaPronto.pop(0)
+                if cpus[i].processo.tempoInicial is None:
+                    cpus[i].processo.tempoInicial=tempoSistema
                 i -= 1
         i += 1
 
